@@ -113,7 +113,7 @@
     bottom: 0;
     width: 2px;
     background: linear-gradient(180deg, var(--color-primary), var(--color-secondary));
-    transform: translateX(-50%);
+   
 }
 
 .timeline-item {
@@ -136,7 +136,7 @@
 
 .timeline-content:hover {
     box-shadow: var(--shadow-medium);
-    transform: translateY(-5px);
+   
 }
 
 .timeline-content--left {
