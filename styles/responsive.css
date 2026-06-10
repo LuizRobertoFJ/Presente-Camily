@@ -1,0 +1,643 @@
+/* ========== RESPONSIVE DESIGN ========== */
+
+/* ========== BREAKPOINTS ========== */
+/* Mobile: < 640px */
+/* Tablet: 640px - 1024px */
+/* Desktop: > 1024px */
+
+/* ========== MOBILE FIRST (BASE: Mobile) ========== */
+
+/* ========== TABLET: 640px and up ========== */
+@media (min-width: 640px) {
+    :root {
+        font-size: 17px;
+    }
+
+    .container {
+        padding: 0 var(--spacing-lg);
+    }
+
+    h1 {
+        font-size: clamp(2.5rem, 8vw, 4rem);
+    }
+
+    h2 {
+        font-size: clamp(2rem, 6vw, 3rem);
+    }
+
+    .section-title {
+        margin-bottom: var(--spacing-2xl);
+    }
+
+    /* Timeline */
+    .timeline::before {
+        left: 50%;
+    }
+
+    .timeline-content {
+        width: 45%;
+    }
+
+    .timeline-marker {
+        font-size: var(--font-size-2xl);
+    }
+
+    /* Reasons Grid */
+    .reasons-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--spacing-xl);
+    }
+
+    /* Counter Grid */
+    .counter-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--spacing-lg);
+    }
+
+    /* Memories Grid */
+    .memories-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--spacing-md);
+    }
+
+    /* Quiz */
+    .quiz-container {
+        padding: var(--spacing-2xl);
+    }
+
+    .quiz-question {
+        padding: var(--spacing-lg);
+    }
+
+    /* Lightbox */
+    .lightbox-content {
+        max-width: 90vw;
+        max-height: 80vh;
+    }
+}
+
+/* ========== TABLET: 768px and up ========== */
+@media (min-width: 768px) {
+    :root {
+        font-size: 17.5px;
+    }
+
+    section {
+        padding: var(--spacing-3xl) 0;
+    }
+
+    .container {
+        padding: 0 var(--spacing-xl);
+    }
+
+    /* Hero */
+    .hero {
+        min-height: 100vh;
+    }
+
+    .hero__content {
+        max-width: 700px;
+    }
+
+    .hero__title {
+        font-size: 4rem;
+    }
+
+    .hero__subtitle {
+        font-size: var(--font-size-xl);
+    }
+
+    /* Timeline */
+    .timeline::before {
+        left: 50%;
+    }
+
+    .timeline-item:nth-child(odd) .timeline-content--left {
+        margin-left: 0;
+        margin-right: auto;
+    }
+
+    .timeline-item:nth-child(even) .timeline-content--right {
+        margin-left: auto;
+        margin-right: 0;
+    }
+
+    .timeline-content {
+        width: 45%;
+        padding: var(--spacing-lg);
+    }
+
+    .timeline-marker {
+        font-size: var(--font-size-2xl);
+        width: 50px;
+        height: 50px;
+    }
+
+    /* Reasons Grid */
+    .reasons-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: var(--spacing-2xl);
+    }
+
+    .reason-card {
+        height: 320px;
+    }
+
+    /* Counter Grid */
+    .counter-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: var(--spacing-2xl);
+    }
+
+    .counter-box {
+        padding: var(--spacing-2xl);
+    }
+
+    /* Letter */
+    .letter-container {
+        padding: var(--spacing-3xl);
+    }
+
+    .letter-content {
+        min-height: 300px;
+    }
+
+    /* Memories Grid */
+    .memories-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: var(--spacing-lg);
+    }
+
+    .memory-item {
+        aspect-ratio: 1;
+    }
+
+    /* Quiz */
+    .quiz-container {
+        max-width: 600px;
+        padding: var(--spacing-2xl);
+    }
+
+    .quiz-question {
+        padding: var(--spacing-lg);
+        margin-bottom: var(--spacing-xl);
+    }
+
+    /* Surprise */
+    .btn-surprise {
+        padding: var(--spacing-lg) var(--spacing-3xl);
+        font-size: var(--font-size-lg);
+    }
+
+    /* Lightbox */
+    .lightbox-content {
+        max-width: 80vw;
+        max-height: 85vh;
+    }
+
+    .lightbox-btn {
+        padding: var(--spacing-md) var(--spacing-lg);
+    }
+}
+
+/* ========== DESKTOP: 1024px and up ========== */
+@media (min-width: 1024px) {
+    :root {
+        font-size: 18px;
+    }
+
+    section {
+        padding: var(--spacing-3xl) 0;
+    }
+
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 var(--spacing-xl);
+    }
+
+    /* Hero */
+    .hero {
+        min-height: 100vh;
+    }
+
+    .hero__content {
+        max-width: 800px;
+    }
+
+    .hero__title {
+        font-size: clamp(3.5rem, 6vw, 4.5rem);
+        letter-spacing: -1px;
+    }
+
+    .hero__subtitle {
+        font-size: 1.5rem;
+    }
+
+    /* Timeline */
+    .timeline {
+        padding: var(--spacing-3xl) 0;
+    }
+
+    .timeline-content {
+        width: 42%;
+        padding: var(--spacing-xl);
+        transition: all var(--transition);
+    }
+
+    .timeline-content:hover {
+        transform: translateY(-10px);
+    }
+
+    .timeline-marker {
+        font-size: 2.5rem;
+        width: 60px;
+        height: 60px;
+    }
+
+    /* Reasons Grid */
+    .reasons-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: var(--spacing-2xl);
+    }
+
+    .reason-card {
+        height: 350px;
+        transition: transform var(--transition);
+    }
+
+    .reason-card:hover {
+        transform: translateY(-15px);
+    }
+
+    /* Counter Grid */
+    .counter-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: var(--spacing-2xl);
+    }
+
+    .counter-box {
+        padding: var(--spacing-3xl) var(--spacing-2xl);
+        transition: transform var(--transition);
+    }
+
+    .counter-box:hover {
+        transform: translateY(-15px);
+    }
+
+    .counter-value {
+        font-size: 3.5rem;
+    }
+
+    /* Letter */
+    .letter-container {
+        max-width: 700px;
+        margin: 0 auto;
+        padding: var(--spacing-3xl);
+    }
+
+    .letter-content {
+        min-height: 350px;
+        font-size: 1.125rem;
+    }
+
+    /* Memories Grid */
+    .memories-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: var(--spacing-2xl);
+    }
+
+    .memory-item {
+        aspect-ratio: 1;
+        border-radius: var(--border-radius-lg);
+        transition: transform 0.4s ease;
+    }
+
+    .memory-item:hover {
+        transform: scale(1.05);
+    }
+
+    /* Quiz */
+    .quiz-container {
+        max-width: 700px;
+        padding: var(--spacing-3xl);
+    }
+
+    .quiz-question {
+        padding: var(--spacing-xl);
+        margin-bottom: var(--spacing-2xl);
+    }
+
+    .quiz-submit {
+        font-size: 1.1rem;
+        padding: var(--spacing-lg) var(--spacing-xl);
+    }
+
+    /* Surprise */
+    .surprise-content {
+        padding: var(--spacing-3xl);
+    }
+
+    .btn-surprise {
+        padding: var(--spacing-lg) var(--spacing-3xl);
+        font-size: 1.25rem;
+    }
+
+    /* Lightbox */
+    .lightbox-content {
+        max-width: 75vw;
+        max-height: 85vh;
+    }
+
+    .lightbox-indicators {
+        gap: var(--spacing-lg);
+    }
+
+    .lightbox-indicator {
+        width: 12px;
+        height: 12px;
+    }
+
+    /* Footer */
+    .footer {
+        padding: var(--spacing-3xl) 0;
+    }
+
+    .footer-text {
+        font-size: 1.25rem;
+    }
+}
+
+/* ========== LARGE DESKTOP: 1440px and up ========== */
+@media (min-width: 1440px) {
+    :root {
+        font-size: 18.5px;
+    }
+
+    .container {
+        max-width: 1320px;
+    }
+
+    .reasons-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .memories-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+@media (max-width: 768px) {
+    .surprise-content {
+        padding: var(--spacing-xl) var(--spacing-sm);
+    }
+    
+    .surprise-message {
+        margin-top: var(--spacing-xl);
+        padding: var(--spacing-xl) var(--spacing-md); /* Menos espaço interno para não apertar o texto */
+    }
+    
+    .surprise-message h3 {
+        font-size: 1.4rem; /* Tamanho confortável para telas médias/pequenas */
+    }
+    
+    .surprise-message p {
+        font-size: 1rem;
+        line-height: 1.6;
+    }
+}
+
+
+/* ========== SMALL DEVICES: < 360px ========== */
+/* Seu bloco original atualizado com a seção de surpresa no fim */
+@media (max-width: 359px) {
+    :root {
+        font-size: 14px;
+    }
+
+    h1 { font-size: 1.75rem; }
+    h2 { font-size: 1.5rem; }
+
+    .container { padding: 0 var(--spacing-md); }
+    section { padding: var(--spacing-2xl) 0; }
+
+    .hero__title { font-size: 1.75rem; }
+    .hero__subtitle { font-size: 0.95rem; }
+    .btn { padding: var(--spacing-sm) var(--spacing-md); font-size: var(--font-size-sm); }
+
+    /* Timeline */
+    .timeline::before { left: 15px; }
+    .timeline-content {
+        width: calc(100% - 50px);
+        margin-left: 50px !important;
+        margin-right: 0 !important;
+        padding: var(--spacing-md);
+    }
+    .timeline-content--right { margin-left: 50px !important; }
+    .timeline-marker { left: 0; font-size: 1.5rem; width: 40px; height: 40px; }
+    .timeline-date { font-size: var(--font-size-xs); }
+    .timeline-title { font-size: var(--font-size-base); }
+
+    /* Reasons Grid */
+    .reasons-grid { grid-template-columns: 1fr; gap: var(--spacing-lg); }
+    .reason-card { height: 250px; }
+
+    /* Counter Grid */
+    .counter-grid { grid-template-columns: repeat(2, 1fr); gap: var(--spacing-md); }
+    .counter-box { padding: var(--spacing-lg); }
+    .counter-value { font-size: 2rem; }
+    .counter-label { font-size: var(--font-size-xs); }
+
+    /* Letter */
+    .letter-container { padding: var(--spacing-lg); }
+    .letter-content { min-height: 150px; font-size: 0.9rem; }
+    .letter-date { font-size: var(--font-size-xs); }
+
+    /* Memories Grid */
+    .memories-grid { grid-template-columns: 1fr; gap: var(--spacing-md); }
+
+    /* Quiz */
+    .quiz-container { max-width: 100%; padding: var(--spacing-lg); }
+    .quiz-question { padding: var(--spacing-md); margin-bottom: var(--spacing-lg); }
+    .quiz-question-text { font-size: var(--font-size-base); }
+
+    /* === Ajustes específicos da Surpresa para celulares MUITO pequenos === */
+    .surprise-content {
+        padding: var(--spacing-lg) 0;
+    }
+    
+    .btn-surprise {
+        padding: var(--spacing-md) var(--spacing-lg);
+        font-size: 0.95rem;
+        width: 100%; /* Faz o botão ocupar a largura disponível, facilitando o clique */
+        box-sizing: border-box;
+    }
+
+    .surprise-message {
+        margin-top: var(--spacing-lg);
+        padding: var(--spacing-lg) var(--spacing-sm);
+        border-radius: 12px;
+    }
+
+    .surprise-message h3 {
+        font-size: 1.25rem;
+        margin-bottom: var(--spacing-md);
+    }
+
+    .surprise-message p {
+        font-size: 0.9rem;
+        line-height: 1.5;
+    }
+
+    /* Lightbox */
+    .lightbox-close { font-size: 2rem; top: var(--spacing-md); right: var(--spacing-md); }
+    .lightbox-btn { padding: var(--spacing-md); font-size: var(--font-size-lg); }
+}
+/* ========== LANDSCAPE MODE ========== */
+@media (max-height: 500px) and (orientation: landscape) {
+    .hero {
+        min-height: auto;
+        padding: var(--spacing-2xl) 0;
+    }
+
+    .hero__content {
+        padding: var(--spacing-md);
+    }
+
+    .hero__title {
+        font-size: 2rem;
+        margin-bottom: var(--spacing-md);
+    }
+
+    .hero__subtitle {
+        font-size: 1rem;
+        margin-bottom: var(--spacing-lg);
+    }
+
+    section {
+        padding: var(--spacing-lg) 0;
+    }
+}
+
+/* ========== TOUCH DEVICES ========== */
+@media (hover: none) and (pointer: coarse) {
+    button {
+        padding: 12px 20px; /* Minimum 44x44px tap target */
+    }
+
+    .memory-item {
+        cursor: pointer;
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+    }
+
+    /* Remove hover effects on touch devices */
+    button:hover,
+    .card-front:hover,
+    .memory-item:hover {
+        transform: none;
+    }
+}
+
+/* ========== HIGH RESOLUTION DEVICES ========== */
+@media (min-width: 1920px) {
+    :root {
+        font-size: 20px;
+    }
+
+    .container {
+        max-width: 1400px;
+    }
+
+    .hero {
+        min-height: 100vh;
+    }
+
+    .memories-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+
+    .reason-card {
+        height: 400px;
+    }
+}
+
+/* ========== DARK MODE (Future Consideration) ========== */
+@media (prefers-color-scheme: dark) {
+    /* Note: For this romantic theme, we keep light mode
+       but this structure is ready for future dark mode */
+}
+
+/* ========== REDUCED MOTION ========== */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+
+    html {
+        scroll-behavior: auto;
+    }
+}
+
+/* ========== HIGH CONTRAST ========== */
+@media (prefers-contrast: more) {
+    button,
+    .card-front,
+    .card-back {
+        border: 2px solid var(--color-dark);
+    }
+
+    .glass-effect {
+        background: rgba(255, 255, 255, 0.3);
+        border: 2px solid var(--color-dark);
+    }
+}
+
+/* ========== PRINT ========== */
+@media print {
+    html {
+        scroll-behavior: auto;
+    }
+
+    body {
+        background: white;
+    }
+
+    section {
+        page-break-inside: avoid;
+        padding: 20px 0;
+    }
+
+    button,
+    nav,
+    .lightbox {
+        display: none;
+    }
+
+    .memory-item,
+    .reason-card,
+    .timeline-item {
+        page-break-inside: avoid;
+    }
+
+    a {
+        text-decoration: underline;
+    }
+}
+
+/* ========== ORIENTATION: PORTRAIT ========== */
+@media (orientation: portrait) {
+    .memories-grid {
+        grid-template-columns: repeat(1, 1fr);
+    }
+}
+
+/* ========== ORIENTATION: LANDSCAPE ========== */
+@media (orientation: landscape) {
+    .hero {
+        min-height: 80vh;
+    }
+}
