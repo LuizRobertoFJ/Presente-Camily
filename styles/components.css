@@ -590,9 +590,42 @@
 }
 
 .card-icon {
-    font-size: 2.6rem;
-    line-height: 1;
-    transition: transform var(--transition);
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 72px;
+    height: 72px;
+    margin-bottom: 0.2rem;
+    border-radius: 50%;
+    color: var(--color-primary);
+    background: linear-gradient(145deg, #fff 0%, var(--color-primary-light) 100%);
+    border: 1px solid rgba(214, 51, 108, 0.18);
+    box-shadow: 0 0 0 6px rgba(255, 227, 234, 0.55), 0 8px 20px rgba(214, 51, 108, 0.18);
+    transition: transform 0.5s var(--ease-spring), color var(--transition), background var(--transition);
+}
+
+.card-icon::after {
+    /* Pontinho dourado decorativo */
+    content: '';
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--gradient-gold);
+    box-shadow: 0 0 6px rgba(201, 162, 75, 0.6);
+}
+
+.card-icon svg {
+    width: 34px;
+    height: 34px;
+    overflow: visible;
+}
+
+.reason-card:focus-visible .card-icon,
+.reason-card:active .card-icon {
+    transform: scale(1.08) rotate(-6deg);
 }
 
 .card-title {
