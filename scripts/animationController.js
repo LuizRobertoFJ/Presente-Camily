@@ -8,8 +8,9 @@
 class AnimationController {
     constructor(options = {}) {
         this.options = {
-            rootMargin: '0px 0px -100px 0px',
-            threshold: 0.1,
+            rootMargin: '0px 0px -60px 0px',
+            threshold: 0.12,
+            stagger: 110,
             ...options
         };
 
@@ -24,11 +25,21 @@ class AnimationController {
      * Inicializar Intersection Observer
      */
     init() {
+        // Sem suporte ou com movimento reduzido: mostrar tudo imediatamente
+        if (!('IntersectionObserver' in window) || prefersReducedMotion()) {
+            document.querySelectorAll('.animate-on-scroll').forEach(el => el.classList.add('is-animated'));
+            return;
+        }
+
         this.observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    this.animateElement(entry.target);
-                }
+            // Elementos que entram juntos na tela aparecem em sequência (stagger)
+            const visible = entries
+                .filter(entry => entry.isIntersecting)
+                .map(entry => entry.target)
+                .sort((a, b) => a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1);
+
+            visible.forEach((element, index) => {
+                this.animateElement(element, Math.min(index, 6) * this.options.stagger);
             });
         }, this.options);
 
@@ -40,6 +51,8 @@ class AnimationController {
      * Observar elementos que devem ser animados
      */
     observeElements() {
+        if (!this.observer) return;
+
         const elements = document.querySelectorAll('.animate-on-scroll');
         elements.forEach(element => {
             if (!this.observedElements.has(element)) {
@@ -52,35 +65,24 @@ class AnimationController {
     /**
      * Animar elemento ao entrar no viewport
      * @param {Element} element - Elemento a animar
+     * @param {number} staggerDelay - Atraso calculado pelo lote (ms)
      */
-    animateElement(element) {
+    animateElement(element, staggerDelay = 0) {
         // Se já foi animado, não animar novamente (once: true)
         if (this.animatedElements.has(element)) {
             return;
         }
 
-        // Marcar como animado
         this.animatedElements.add(element);
+        this.observer.unobserve(element);
 
-        // Obter dados do elemento
-        const animationType = element.dataset.animation || 'fade-in';
-        const duration = parseInt(element.dataset.duration) || 600;
-        const delay = parseInt(element.dataset.delay) || 0;
+        if (element.dataset.duration) {
+            element.style.animationDuration = `${parseInt(element.dataset.duration, 10)}ms`;
+        }
+        element.style.animationDelay = `${staggerDelay}ms`;
 
-        // Aplicar estilo de animação
-        element.style.animationName = animationType;
-        element.style.animationDuration = `${duration}ms`;
-        element.style.animationDelay = `${delay}ms`;
-        element.style.animationFillMode = 'forwards';
-        element.style.animationTimingFunction = 'ease-out';
-
-        // Adicionar classe para ativar animação
+        // A classe ativa a animação definida em animations.css por data-animation
         element.classList.add('is-animated');
-
-        // Parar de observar após animação completa (para economia de recursos)
-        setTimeout(() => {
-            this.observer.unobserve(element);
-        }, duration + delay);
     }
 
     /**
@@ -100,12 +102,13 @@ class AnimationController {
             return;
         }
 
-        element.style.animationName = animationType;
+        element.dataset.animation = animationType;
         element.style.animationDuration = `${duration}ms`;
         element.style.animationDelay = `${delay}ms`;
-        element.style.animationFillMode = 'forwards';
-        element.style.animationTimingFunction = 'ease-out';
 
+        // Reinicia a animação caso o elemento já tenha sido animado
+        element.classList.remove('is-animated');
+        void element.offsetWidth;
         element.classList.add('is-animated');
 
         this.animatedElements.add(element);
@@ -115,20 +118,14 @@ class AnimationController {
      * Fazer observer iniciar novamente (útil para conteúdo dinâmico)
      */
     refresh() {
-        const elements = document.querySelectorAll('.animate-on-scroll');
-        elements.forEach(element => {
-            if (!this.observedElements.has(element)) {
-                this.observer.observe(element);
-                this.observedElements.add(element);
-            }
-        });
+        this.observeElements();
     }
 
     /**
      * Parar de observar todos os elementos
      */
     destroy() {
-        this.observer.disconnect();
+        this.observer?.disconnect();
         this.observedElements.clear();
         this.animatedElements.clear();
     }
@@ -141,11 +138,11 @@ class AnimationController {
         const animatedElements = document.querySelectorAll('.is-animated');
         animatedElements.forEach(element => {
             element.classList.remove('is-animated');
-            element.style.animationName = '';
             element.style.animationDuration = '';
             element.style.animationDelay = '';
         });
 
+        this.observedElements.clear();
         this.observeElements();
     }
 
@@ -196,10 +193,7 @@ let animationController = null;
  * Inicializar animationController quando DOM estiver pronto
  */
 function initAnimationController() {
-    animationController = new AnimationController({
-        rootMargin: '0px 0px -50px 0px',
-        threshold: 0.1
-    });
+    animationController = new AnimationController();
 
     log('AnimationController inicializado', 'info');
 }

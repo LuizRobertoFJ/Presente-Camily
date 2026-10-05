@@ -7,13 +7,11 @@ Um site interativo, responsivo e emocionante que conta a história de um casal. 
 ### Seções
 1. **Hero** - Apresentação inicial com partículas animadas
 2. **Timeline** - Linha do tempo dos marcos importantes do relacionamento
-3. **Galeria (Carousel)** - Carrossel de fotos com swipe em mobile
-4. **Razões** - Cards interativos com flip animation
-5. **Contador** - Tempo junto em dias, horas, minutos, segundos (tempo real)
-6. **Carta de Amor** - Efeito máquina de escrever com texto elegante
-7. **Memórias** - Grid de imagens com lightbox
-8. **Quiz** - Perguntas divertidas sobre o casal
-9. **Surpresa** - Botão com celebração (confete + corações + sparkles)
+3. **Razões** - Cards que viram com toque (celular) ou hover (desktop)
+4. **Contador** - Tempo junto em dias, horas, minutos, segundos (tempo real)
+5. **Carta de Amor** - Efeito máquina de escrever, com botão "Ler tudo agora"
+6. **Memórias** - Polaroids com lightbox (swipe para os lados, arrastar para baixo fecha)
+7. **Surpresa** - Presente que abre com confete, corações, brilhos e a nossa música
 
 ### Animações Premium
 - ✅ Entrada de seções com Intersection Observer (fade-in, slide-up, scale-in)
@@ -28,7 +26,7 @@ Um site interativo, responsivo e emocionante que conta a história de um casal. 
 ### Design
 - 🎨 **Tema Romântico**: Rosa, vermelho, vinho, dourado
 - ✨ **Glassmorphism**: Efeito de vidro com backdrop-filter
-- 🎭 **Tipografia Elegante**: Playfair Display + Poppins
+- 🎭 **Tipografia Elegante**: Cormorant Garamond + Great Vibes + Poppins
 - 📱 **Responsivo**: Mobile-first, totalmente responsivo
 - 💫 **Premium**: Sombras suaves, bordas arredondadas, gradientes
 
@@ -45,12 +43,11 @@ Amor/
 ├── scripts/
 │   ├── utils.js                  (30+ funções helper)
 │   ├── animationController.js    (Intersection Observer)
-│   ├── carousel.js               (carrossel com swipe)
 │   ├── counter.js                (contador tempo real)
 │   ├── typewriter.js             (máquina de escrever)
 │   ├── particles.js              (sistema de partículas)
-│   ├── quiz.js                   (quiz interativo)
 │   ├── celebration.js            (confete, corações, sparkles)
+│   ├── lightbox.js               (visualizador de fotos com swipe)
 │   └── main.js                   (orquestrador)
 └── assets/                       (9 imagens)
 ```

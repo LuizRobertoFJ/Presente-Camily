@@ -2,21 +2,22 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Um site romântico e interativo contando a história de um casal no Dia dos Namorados.">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Sirivennela&display=swap" rel="stylesheet">
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Julius+Sans+One&display=swap" rel="stylesheet">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>❤️</text></svg>">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="description" content="Um site romântico e interativo contando a nossa história no Dia dos Namorados.">
+    <meta name="theme-color" content="#fff1f3">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <title>Feliz Dia dos Namorados ❤️</title>
-    
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>❤️</text></svg>">
+
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Great+Vibes&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <!-- Esconde elementos animados só quando o JS está ativo -->
+    <script>document.documentElement.classList.add('js');</script>
+
     <!-- CSS -->
     <link rel="stylesheet" href="styles/main.css">
     <link rel="stylesheet" href="styles/components.css">
@@ -24,384 +25,429 @@
     <link rel="stylesheet" href="styles/responsive.css">
 </head>
 <body>
-    <!-- ========== SEÇÃO 1: HERO ========== -->
-    <section class="hero" id="hero">
-        <div class="hero__content">
-            <h1 class="hero__title animate-on-scroll" data-animation="fade-in" data-duration="800">
-                Feliz Dia dos Namorados 💕
-            </h1>
-            <p class="hero__subtitle animate-on-scroll" data-animation="slide-up" data-duration="800" data-delay="200">
-                Uma celebração do nosso amor, nossas memórias e nosso futuro juntos.
-            </p>
-            <button class="btn btn-primary hero__btn animate-on-scroll" data-animation="scale-in" data-duration="800" data-delay="400" onclick="smoothScroll('#timeline')">
-                Nossa História ❤️
-            </button>
-        <div class="hero__background">
-            <canvas id="particleCanvas"></canvas>
-        </div>
-    </section>
+    <!-- Barra de progresso de leitura -->
+    <div class="scroll-progress" aria-hidden="true"><span class="scroll-progress__bar"></span></div>
 
-    <!-- ========== SEÇÃO 2: TIMELINE ========== -->
-    <section class="timeline-section" id="timeline">
-        <div class="container">
-            <h2 class="section-title animate-on-scroll" data-animation="fade-in" data-duration="600">
-                Nossa Jornada 
-            </h2>
-            
-            <div class="timeline">
-                <!-- Timeline Item 1 -->
-                <div class="timeline-item animate-on-scroll" data-animation="slide-up" data-duration="700" data-delay="0">
-                    <div class="timeline-content timeline-content--left">
-                        <div class="timeline-marker">📅</div>
-                        <div class="timeline-body">
-                            <h3 class="timeline-date">Setembro de 2025</h3>
-                            <h4 class="timeline-title">O Primeiro Encontro</h4>
+    <!-- Navegação lateral (desktop) -->
+    <nav class="dot-nav" aria-label="Seções">
+        <a href="#hero" class="dot-nav__link" data-label="Início"><span class="sr-only">Início</span></a>
+        <a href="#timeline" class="dot-nav__link" data-label="Nossa Jornada"><span class="sr-only">Nossa Jornada</span></a>
+        <a href="#reasons" class="dot-nav__link" data-label="Por que te amo"><span class="sr-only">Por que te amo</span></a>
+        <a href="#counter" class="dot-nav__link" data-label="Nosso tempo"><span class="sr-only">Nosso tempo</span></a>
+        <a href="#letter" class="dot-nav__link" data-label="A carta"><span class="sr-only">A carta</span></a>
+        <a href="#memories" class="dot-nav__link" data-label="Memórias"><span class="sr-only">Memórias</span></a>
+        <a href="#surprise" class="dot-nav__link" data-label="Surpresa"><span class="sr-only">Surpresa</span></a>
+    </nav>
+
+    <!-- Voltar ao topo -->
+    <a href="#hero" class="back-to-top" aria-label="Voltar ao início">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5l-7 7m7-7l7 7M12 5v14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
+
+    <main>
+        <!-- ========== SEÇÃO 1: HERO ========== -->
+        <section class="hero" id="hero">
+            <div class="hero__background" aria-hidden="true">
+                <span class="hero__blob hero__blob--1"></span>
+                <span class="hero__blob hero__blob--2"></span>
+                <span class="hero__blob hero__blob--3"></span>
+                <canvas id="particleCanvas"></canvas>
+            </div>
+
+            <div class="hero__content">
+                <div class="hero__avatar animate-on-scroll" data-animation="scale-in">
+                    <img src="assets/WhatsApp Image 2026-06-08 at 14.46.30 (1).jpeg" alt="Nós dois" width="160" height="160" decoding="async" fetchpriority="high">
+                    <span class="hero__avatar-heart" aria-hidden="true">❤</span>
+                </div>
+
+                <p class="eyebrow animate-on-scroll" data-animation="fade-in">12 de junho · Para Camily</p>
+
+                <h1 class="hero__title animate-on-scroll" data-animation="slide-up">
+                    Feliz Dia dos
+                    <span class="hero__title-script">Namorados</span>
+                </h1>
+
+                <p class="hero__subtitle animate-on-scroll" data-animation="slide-up">
+                    Uma celebração do nosso amor, nossas memórias e nosso futuro juntos.
+                </p>
+
+                <a href="#timeline" class="btn btn-primary hero__btn animate-on-scroll" data-animation="scale-in">
+                    Nossa História
+                    <svg class="btn__icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7.5-4.6-9.6-9.2C.9 8.4 3 4.5 6.6 4.5c2.1 0 3.5 1.2 4.4 2.6.9-1.4 2.3-2.6 4.4-2.6 3.6 0 5.7 3.9 4.2 7.3C19.5 16.4 12 21 12 21z" fill="currentColor"/></svg>
+                </a>
+            </div>
+
+            <a href="#timeline" class="scroll-hint" aria-label="Rolar para baixo">
+                <span class="scroll-hint__mouse"><span class="scroll-hint__wheel"></span></span>
+                <span class="scroll-hint__text">role para baixo</span>
+            </a>
+        </section>
+
+        <!-- ========== SEÇÃO 2: TIMELINE ========== -->
+        <section class="timeline-section" id="timeline">
+            <div class="container">
+                <header class="section-header animate-on-scroll" data-animation="slide-up">
+                    <span class="eyebrow">Capítulo I</span>
+                    <h2 class="section-title">Nossa Jornada</h2>
+                    <span class="section-divider" aria-hidden="true"></span>
+                </header>
+
+                <ol class="timeline">
+                    <li class="timeline-item timeline-item--left animate-on-scroll" data-animation="slide-up">
+                        <div class="timeline-marker" aria-hidden="true">📅</div>
+                        <article class="timeline-content">
+                            <time class="timeline-date">Setembro de 2025</time>
+                            <h3 class="timeline-title">O Primeiro Encontro</h3>
                             <p class="timeline-description">Tudo começou com um sorriso que nunca mais esqueci.</p>
-                        </div>
-                    </div>
-                </div>
+                        </article>
+                    </li>
 
-                <!-- Timeline Item 2 -->
-                <div class="timeline-item animate-on-scroll" data-animation="slide-up" data-duration="700" data-delay="200">
-                    <div class="timeline-content timeline-content--right">
-                        <div class="timeline-marker">💍</div>
-                        <div class="timeline-body">
-                            <h3 class="timeline-date">Novembro de 2025</h3>
-                            <h4 class="timeline-title">O Pedido</h4>
+                    <li class="timeline-item timeline-item--right animate-on-scroll" data-animation="slide-up">
+                        <div class="timeline-marker" aria-hidden="true">💍</div>
+                        <article class="timeline-content">
+                            <time class="timeline-date">Novembro de 2025</time>
+                            <h3 class="timeline-title">O Pedido</h3>
                             <p class="timeline-description">Aquele momento onde você disse "sim" mudou tudo para mim.</p>
-                        </div>
-                    </div>
-                </div>
+                        </article>
+                    </li>
 
-                <!-- Timeline Item 3 -->
-                <div class="timeline-item animate-on-scroll" data-animation="slide-up" data-duration="700" data-delay="400">
-                    <div class="timeline-content timeline-content--left">
-                        <div class="timeline-marker">🎉</div>
-                        <div class="timeline-body">
-                            <h3 class="timeline-date">Janeiro de 2026</h3>
-                            <h4 class="timeline-title">Primeiro Ano novo</h4>
+                    <li class="timeline-item timeline-item--left animate-on-scroll" data-animation="slide-up">
+                        <div class="timeline-marker" aria-hidden="true">🎉</div>
+                        <article class="timeline-content">
+                            <time class="timeline-date">Janeiro de 2026</time>
+                            <h3 class="timeline-title">Primeiro Ano Novo</h3>
                             <p class="timeline-description">Passar o primeiro dia do ano com você foi o melhor presente que já recebi.</p>
-                        </div>
-                    </div>
-                </div>
+                        </article>
+                    </li>
 
-                <!-- Timeline Item 4 -->
-                <div class="timeline-item animate-on-scroll" data-animation="slide-up" data-duration="700" data-delay="600">
-                    <div class="timeline-content timeline-content--right">
-                       <div class="timeline-marker">🌍</div>
-                        <div class="timeline-body">
-                            <h3 class="timeline-date">Março de 2026</h3>
-                            <h4 class="timeline-title">Viagem para o Rosa</h4>
+                    <li class="timeline-item timeline-item--right animate-on-scroll" data-animation="slide-up">
+                        <div class="timeline-marker" aria-hidden="true">🌍</div>
+                        <article class="timeline-content">
+                            <time class="timeline-date">Março de 2026</time>
+                            <h3 class="timeline-title">Viagem para o Rosa</h3>
                             <p class="timeline-description">Conhecemos a praia do Rosa e nos sentimos como se estivéssemos em um sonho.</p>
-                        </div>
-                        </div>
-                    </div>
-                </div>
+                        </article>
+                    </li>
 
-                <!-- Timeline Item 5 -->
-                <div class="timeline-item animate-on-scroll" data-animation="slide-up" data-duration="700" data-delay="800">
-                    <div class="timeline-content timeline-content--left">
-                        <div class="timeline-marker">⭐</div>
-                        <div class="timeline-body">
-                            <h3 class="timeline-date">Hoje</h3>
-                            <h4 class="timeline-title">Sempre Aqui</h4>
+                    <li class="timeline-item timeline-item--left animate-on-scroll" data-animation="slide-up">
+                        <div class="timeline-marker timeline-marker--now" aria-hidden="true">⭐</div>
+                        <article class="timeline-content">
+                            <time class="timeline-date">Hoje</time>
+                            <h3 class="timeline-title">Sempre Aqui</h3>
                             <p class="timeline-description">E continuaremos escrevendo nossa história juntos, para sempre.</p>
+                        </article>
+                    </li>
+                </ol>
+            </div>
+        </section>
+
+        <!-- ========== SEÇÃO 3: RAZÕES (CARDS) ========== -->
+        <section class="reasons-section" id="reasons">
+            <div class="container">
+                <header class="section-header animate-on-scroll" data-animation="slide-up">
+                    <span class="eyebrow">Capítulo II</span>
+                    <h2 class="section-title">Por Que Eu Te Amo</h2>
+                    <span class="section-divider" aria-hidden="true"></span>
+                    <p class="section-lead">Toque em cada carta para descobrir.</p>
+                </header>
+
+                <div class="reasons-grid">
+                    <button type="button" class="reason-card animate-on-scroll" data-animation="scale-in" aria-pressed="false">
+                        <span class="card-inner">
+                            <span class="card-front">
+                                <span class="card-number">01</span>
+                                <span class="card-icon" aria-hidden="true">😊</span>
+                                <span class="card-title">Seu Sorriso</span>
+                                <span class="card-hint" aria-hidden="true">toque para virar</span>
+                            </span>
+                            <span class="card-back">
+                                <span class="card-text">Seu sorriso ilumina meus dias mais escuros e me faz esquecer de todas as preocupações.</span>
+                            </span>
+                        </span>
+                    </button>
+
+                    <button type="button" class="reason-card animate-on-scroll" data-animation="scale-in" aria-pressed="false">
+                        <span class="card-inner">
+                            <span class="card-front">
+                                <span class="card-number">02</span>
+                                <span class="card-icon" aria-hidden="true">💪</span>
+                                <span class="card-title">Sua Força</span>
+                                <span class="card-hint" aria-hidden="true">toque para virar</span>
+                            </span>
+                            <span class="card-back">
+                                <span class="card-text">Você é meu apoio em tempos difíceis, sempre forte e disposta a me proteger.</span>
+                            </span>
+                        </span>
+                    </button>
+
+                    <button type="button" class="reason-card animate-on-scroll" data-animation="scale-in" aria-pressed="false">
+                        <span class="card-inner">
+                            <span class="card-front">
+                                <span class="card-number">03</span>
+                                <span class="card-icon" aria-hidden="true">😂</span>
+                                <span class="card-title">Seu Humor</span>
+                                <span class="card-hint" aria-hidden="true">toque para virar</span>
+                            </span>
+                            <span class="card-back">
+                                <span class="card-text">Você me faz rir todos os dias, mesmo nos momentos em que tudo parece impossível.</span>
+                            </span>
+                        </span>
+                    </button>
+
+                    <button type="button" class="reason-card animate-on-scroll" data-animation="scale-in" aria-pressed="false">
+                        <span class="card-inner">
+                            <span class="card-front">
+                                <span class="card-number">04</span>
+                                <span class="card-icon" aria-hidden="true">❤️</span>
+                                <span class="card-title">Seu Coração</span>
+                                <span class="card-hint" aria-hidden="true">toque para virar</span>
+                            </span>
+                            <span class="card-back">
+                                <span class="card-text">Você ama com toda sinceridade e dedica-se completamente às pessoas que importam.</span>
+                            </span>
+                        </span>
+                    </button>
+
+                    <button type="button" class="reason-card animate-on-scroll" data-animation="scale-in" aria-pressed="false">
+                        <span class="card-inner">
+                            <span class="card-front">
+                                <span class="card-number">05</span>
+                                <span class="card-icon" aria-hidden="true">✨</span>
+                                <span class="card-title">Sua Inspiração</span>
+                                <span class="card-hint" aria-hidden="true">toque para virar</span>
+                            </span>
+                            <span class="card-back">
+                                <span class="card-text">Você me inspira a ser uma pessoa melhor a cada dia que passa ao seu lado.</span>
+                            </span>
+                        </span>
+                    </button>
+
+                    <button type="button" class="reason-card animate-on-scroll" data-animation="scale-in" aria-pressed="false">
+                        <span class="card-inner">
+                            <span class="card-front">
+                                <span class="card-number">06</span>
+                                <span class="card-icon" aria-hidden="true">💞</span>
+                                <span class="card-title">Nosso Amor</span>
+                                <span class="card-hint" aria-hidden="true">toque para virar</span>
+                            </span>
+                            <span class="card-back">
+                                <span class="card-text">Juntos criamos um amor verdadeiro que transcende tudo.</span>
+                            </span>
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== SEÇÃO 4: CONTADOR ========== -->
+        <section class="counter-section" id="counter">
+            <div class="container">
+                <header class="section-header animate-on-scroll" data-animation="slide-up">
+                    <span class="eyebrow">Capítulo III</span>
+                    <h2 class="section-title">Nosso Tempo Juntos</h2>
+                    <span class="section-divider" aria-hidden="true"></span>
+                    <p class="section-lead">
+                        Desde que começamos nossa jornada juntos, cada momento tem sido precioso.
+                        Aqui está o tempo que passamos lado a lado:
+                    </p>
+                </header>
+
+                <div class="counter-grid">
+                    <div class="counter-box animate-on-scroll" data-animation="slide-up">
+                        <div class="counter-value" data-counter="days">0</div>
+                        <div class="counter-label">Dias</div>
+                    </div>
+                    <div class="counter-box animate-on-scroll" data-animation="slide-up">
+                        <div class="counter-value" data-counter="hours">0</div>
+                        <div class="counter-label">Horas</div>
+                    </div>
+                    <div class="counter-box animate-on-scroll" data-animation="slide-up">
+                        <div class="counter-value" data-counter="minutes">0</div>
+                        <div class="counter-label">Minutos</div>
+                    </div>
+                    <div class="counter-box animate-on-scroll" data-animation="slide-up">
+                        <div class="counter-value" data-counter="seconds">0</div>
+                        <div class="counter-label">Segundos</div>
+                    </div>
+                </div>
+
+                <p class="counter-since animate-on-scroll" data-animation="fade-in">
+                    <span aria-hidden="true">♥</span> desde 08 de novembro de 2025 <span aria-hidden="true">♥</span>
+                </p>
+
+                <!-- Customizar data de início aqui -->
+                <input type="hidden" id="startDate" value="2025-11-08T19:00:00">
+            </div>
+        </section>
+
+        <!-- ========== SEÇÃO 5: CARTA DE AMOR ========== -->
+        <section class="letter-section" id="letter">
+            <div class="container">
+                <header class="section-header animate-on-scroll" data-animation="slide-up">
+                    <span class="eyebrow">Capítulo IV</span>
+                    <h2 class="section-title">Uma Carta Para Você</h2>
+                    <span class="section-divider" aria-hidden="true"></span>
+                </header>
+
+                <article class="letter-container animate-on-scroll" data-animation="slide-up">
+                    <span class="letter-seal" aria-hidden="true">❤</span>
+                    <div class="letter-header">
+                        <time class="letter-date">12 de Junho de 2026</time>
+                    </div>
+
+                    <div class="letter-content" aria-live="polite">
+                        <p id="typewriter-text"></p><span class="typewriter-cursor" aria-hidden="true"></span>
+                    </div>
+
+                    <div class="letter-footer">
+                        <button type="button" class="btn btn-ghost letter-skip" id="letterSkip">Ler tudo agora</button>
+                        <div class="letter-signature">
+                            <p>Com todo meu amor,</p>
+                            <span class="letter-signature__heart" aria-hidden="true">❤️</span>
                         </div>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <!-- ========== SEÇÃO 6: GALERIA DE MEMÓRIAS ========== -->
+        <section class="memories-section" id="memories">
+            <div class="container">
+                <header class="section-header animate-on-scroll" data-animation="slide-up">
+                    <span class="eyebrow">Capítulo V</span>
+                    <h2 class="section-title">Memórias Especiais</h2>
+                    <span class="section-divider" aria-hidden="true"></span>
+                    <p class="section-lead">Toque em uma foto para ampliar.</p>
+                </header>
+
+                <div class="memories-grid">
+                    <button type="button" class="memory-item animate-on-scroll" data-animation="scale-in" style="--rot:-2deg">
+                        <img src="assets/63d65879-4111-4f9f-8b52-05b7ccf115ae.jpeg" alt="Memória 1" loading="lazy" decoding="async" width="1600" height="1200">
+                        <span class="memory-overlay" aria-hidden="true"><span class="memory-icon">⤢</span></span>
+                    </button>
+                    <button type="button" class="memory-item animate-on-scroll" data-animation="scale-in" style="--rot:1.5deg">
+                        <img src="assets/6b9428b6-5bc2-4570-b709-8ffc2489c8cc.jpeg" alt="Memória 2" loading="lazy" decoding="async" width="960" height="1280">
+                        <span class="memory-overlay" aria-hidden="true"><span class="memory-icon">⤢</span></span>
+                    </button>
+                    <button type="button" class="memory-item animate-on-scroll" data-animation="scale-in" style="--rot:-1deg">
+                        <img src="assets/731be33c-ed69-4531-b02a-bc084b448828.jpeg" alt="Memória 3" loading="lazy" decoding="async" width="1200" height="1600">
+                        <span class="memory-overlay" aria-hidden="true"><span class="memory-icon">⤢</span></span>
+                    </button>
+                    <button type="button" class="memory-item animate-on-scroll" data-animation="scale-in" style="--rot:2deg">
+                        <img src="assets/95ecfa30-aab8-4bdf-8fec-386409ecc985.jpeg" alt="Memória 4" loading="lazy" decoding="async" width="1600" height="1200">
+                        <span class="memory-overlay" aria-hidden="true"><span class="memory-icon">⤢</span></span>
+                    </button>
+                    <button type="button" class="memory-item animate-on-scroll" data-animation="scale-in" style="--rot:-1.5deg">
+                        <img src="assets/b4948355-ff55-40bd-a8d9-16d87e4ac88b.jpeg" alt="Memória 5" loading="lazy" decoding="async" width="1200" height="1600">
+                        <span class="memory-overlay" aria-hidden="true"><span class="memory-icon">⤢</span></span>
+                    </button>
+                    <button type="button" class="memory-item animate-on-scroll" data-animation="scale-in" style="--rot:1deg">
+                        <img src="assets/c16f2193-c892-4d25-9127-845dc3a18718.jpeg" alt="Memória 6" loading="lazy" decoding="async" width="1200" height="1600">
+                        <span class="memory-overlay" aria-hidden="true"><span class="memory-icon">⤢</span></span>
+                    </button>
+                    <button type="button" class="memory-item animate-on-scroll" data-animation="scale-in" style="--rot:-2deg">
+                        <img src="assets/ea667619-6b26-4264-974c-062ac0b05673.jpeg" alt="Memória 7" loading="lazy" decoding="async" width="1200" height="1600">
+                        <span class="memory-overlay" aria-hidden="true"><span class="memory-icon">⤢</span></span>
+                    </button>
+                    <button type="button" class="memory-item animate-on-scroll" data-animation="scale-in" style="--rot:1.5deg">
+                        <img src="assets/WhatsApp Image 2026-06-08 at 14.46.30.jpeg" alt="Memória 8" loading="lazy" decoding="async" width="1198" height="1600">
+                        <span class="memory-overlay" aria-hidden="true"><span class="memory-icon">⤢</span></span>
+                    </button>
+                    <button type="button" class="memory-item animate-on-scroll" data-animation="scale-in" style="--rot:-1deg">
+                        <img src="assets/WhatsApp Image 2026-06-08 at 14.46.30 (1).jpeg" alt="Memória 9" loading="lazy" decoding="async" width="1600" height="1200">
+                        <span class="memory-overlay" aria-hidden="true"><span class="memory-icon">⤢</span></span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== SEÇÃO 7: SURPRESA ========== -->
+        <section class="surprise-section" id="surprise">
+            <div class="container">
+                <header class="section-header animate-on-scroll" data-animation="slide-up">
+                    <span class="eyebrow">Capítulo VI</span>
+                    <h2 class="section-title">Uma Surpresa Especial</h2>
+                    <span class="section-divider" aria-hidden="true"></span>
+                </header>
+
+                <div class="surprise-content animate-on-scroll" data-animation="scale-in">
+                    <button type="button" class="btn-surprise" id="surpriseBtn" onclick="celebrate()">
+                        <span class="btn-surprise__ring" aria-hidden="true"></span>
+                        <span class="btn-surprise__icon" aria-hidden="true">🎁</span>
+                        <span class="btn-surprise__label">Toque para abrir</span>
+                    </button>
+
+                    <div class="surprise-message" id="surpriseMessage" hidden>
+                        <h3>Feliz Dia dos Namorados! 💝</h3>
+                        <p>
+                            Você é o meu maior presente, meu amor eterno.<br>
+                            Obrigado por tornar cada dia extraordinário. Te amo infinitamente!
+                        </p>
+                        <figure class="surprise-photo">
+                            <img src="assets/WhatsApp Image 2026-06-08 at 14.46.30 (1).jpeg" alt="Nós dois juntos" loading="lazy" decoding="async" width="1600" height="1200">
+                        </figure>
+                        <iframe class="spotify-player" title="Nossa música no Spotify"
+                            data-src="https://open.spotify.com/embed/track/0ZPquQV2aKmDfwPjvMdvRp?utm_source=generator&theme=0&si=e27c1309e0d04408"
+                            width="100%" height="152" frameborder="0"
+                            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+                        <p class="surprise-hearts" aria-hidden="true">❤️ ❤️ ❤️</p>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
+    </main>
 
-    <!-- ========== SEÇÃO 3: RAZÕES (CARDS) ========== -->
-    <section class="reasons-section" id="reasons">
-        <div class="container">
-            <h2 class="section-title animate-on-scroll" data-animation="fade-in" data-duration="600">
-                Por Que Eu Te Amo 
-            </h2>
-            
-            <div class="reasons-grid">
-                <!-- Card 1 -->
-                <div class="reason-card animate-on-scroll" data-animation="scale-in" data-duration="700" data-delay="0">
-                    <div class="card-inner">
-                        <div class="card-front">
-                            
-                            <h3 class="card-title">Seu Sorriso</h3>
-                        </div>
-                        <div class="card-back">
-                            <p>Seu sorriso ilumina meus dias mais escuros e me faz esquecer de todas as preocupações.</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 2 -->
-                <div class="reason-card animate-on-scroll" data-animation="scale-in" data-duration="700" data-delay="150">
-                    <div class="card-inner">
-                        <div class="card-front">
-                            
-                            <h3 class="card-title">Sua Força</h3>
-                        </div>
-                        <div class="card-back">
-                            <p>Você é meu apoio em tempos difíceis, sempre forte e disposta a me proteger.</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 3 -->
-                <div class="reason-card animate-on-scroll" data-animation="scale-in" data-duration="700" data-delay="300">
-                    <div class="card-inner">
-                        <div class="card-front">
-                           
-                            <h3 class="card-title">Seu Humor</h3>
-                        </div>
-                        <div class="card-back">
-                            <p>Você me faz rir todos os dias, mesmo nos momentos em que tudo parece impossível.</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 4 -->
-                <div class="reason-card animate-on-scroll" data-animation="scale-in" data-duration="700" data-delay="450">
-                    <div class="card-inner">
-                        <div class="card-front">
-                            
-                            <h3 class="card-title">Seu Coração</h3>
-                        </div>
-                        <div class="card-back">
-                            <p>Você ama com toda sinceridade e dedica-se completamente às pessoas que importam.</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 5 -->
-                <div class="reason-card animate-on-scroll" data-animation="scale-in" data-duration="700" data-delay="600">
-                    <div class="card-inner">
-                        <div class="card-front">
-                            
-                            <h3 class="card-title">Sua Inspiração</h3>
-                        </div>
-                        <div class="card-back">
-                            <p>Você me inspira a ser uma pessoa melhor a cada dia que passa ao seu lado.</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 6 -->
-                <div class="reason-card animate-on-scroll" data-animation="scale-in" data-duration="700" data-delay="750">
-                    <div class="card-inner">
-                        <div class="card-front">
-                            
-                            <h3 class="card-title">Nosso amor</h3>
-                        </div>
-                        <div class="card-back">
-                            <p>Juntos criamos um amor verdadeiro que transcende tudo  .</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- ========== SEÇÃO 4: CONTADOR ========== -->
-    <section class="counter-section" id="counter">
-        <div class="container">
-            <h2 class="section-title animate-on-scroll" data-animation="fade-in" data-duration="600">
-                Nosso Tempo Junto 
-            </h2>
-            
-            <p class="counter-subtitle animate-on-scroll" data-animation="slide-up" data-duration="600" data-delay="200">
-                Desde que começamos nossa jornada juntos, cada momento tem sido precioso. Aqui está o tempo que passamos lado a lado:
-            </p>
-
-            <div class="counter-grid animate-on-scroll" data-animation="scale-in" data-duration="700" data-delay="300">
-                <div class="counter-box glass-effect">
-                    <div class="counter-value" data-counter="days">0</div>
-                    <div class="counter-label">Dias</div>
-                </div>
-                <div class="counter-box glass-effect">
-                    <div class="counter-value" data-counter="hours">0</div>
-                    <div class="counter-label">Horas</div>
-                </div>
-                <div class="counter-box glass-effect">
-                    <div class="counter-value" data-counter="minutes">0</div>
-                    <div class="counter-label">Minutos</div>
-                </div>
-                <div class="counter-box glass-effect">
-                    <div class="counter-value" data-counter="seconds">0</div>
-                    <div class="counter-label">Segundos</div>
-                </div>
-            </div>
-
-            <!-- Customizar data de início aqui -->
-            <input type="hidden" id="startDate" value="2025-11-08T19:00:00">
-        </div>
-    </section>
-
-    <!-- ========== SEÇÃO 6: CARTA DE AMOR ========== -->
-    <section class="letter-section" id="letter">
-        <div class="container">
-            <h2 class="section-title animate-on-scroll" data-animation="fade-in" data-duration="600">
-                Uma Carta Para Voce 
-            </h2>
-
-            <div class="letter-container animate-on-scroll glass-effect" data-animation="scale-in" data-duration="800">
-                <div class="letter-header">
-                    <div class="letter-date">12 de Junho de 2026</div>
-                </div>
-                
-                <div class="letter-content">
-                    <p id="typewriter-text"></p>
-                    <span class="typewriter-cursor">|</span>
-                </div>
-
-                <div class="letter-signature">
-                    <p>Com todo meu amor,</p>
-                    <p style="font-size: 2rem; margin-top: 1rem;">❤️</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- ========== SEÇÃO 7: GALERIA DE MEMÓRIAS ========== -->
-    <section class="memories-section" id="memories">
-        <div class="container">
-            <h2 class="section-title animate-on-scroll" data-animation="fade-in" data-duration="600">
-                Memorias Especiais 
-            </h2>
-
-            <div class="memories-grid">
-                <div class="memory-item animate-on-scroll" data-animation="scale-in" data-duration="600" onclick="openLightbox(0)">
-                    <img src="assets/63d65879-4111-4f9f-8b52-05b7ccf115ae.jpeg" alt="Memória 1" loading="lazy">
-                    <div class="memory-overlay">
-                        <span class="memory-icon"></span>
-                    </div>
-                </div>
-
-                <div class="memory-item animate-on-scroll" data-animation="scale-in" data-duration="600" data-delay="100" onclick="openLightbox(1)">
-                    <img src="assets/6b9428b6-5bc2-4570-b709-8ffc2489c8cc.jpeg" alt="Memória 2" loading="lazy">
-                    <div class="memory-overlay">
-                        <span class="memory-icon"></span>
-                    </div>
-                </div>
-
-                <div class="memory-item animate-on-scroll" data-animation="scale-in" data-duration="600" data-delay="200" onclick="openLightbox(2)">
-                    <img src="assets/731be33c-ed69-4531-b02a-bc084b448828.jpeg" alt="Memória 3" loading="lazy">
-                    <div class="memory-overlay">
-                        <span class="memory-icon"></span>
-                    </div>
-                </div>
-
-                <div class="memory-item animate-on-scroll" data-animation="scale-in" data-duration="600" data-delay="300" onclick="openLightbox(3)">
-                    <img src="assets/95ecfa30-aab8-4bdf-8fec-386409ecc985.jpeg" alt="Memória 4" loading="lazy">
-                    <div class="memory-overlay">
-                        <span class="memory-icon"></span>
-                    </div>
-                </div>
-
-                <div class="memory-item animate-on-scroll" data-animation="scale-in" data-duration="600" data-delay="400" onclick="openLightbox(4)">
-                    <img src="assets/b4948355-ff55-40bd-a8d9-16d87e4ac88b.jpeg" alt="Memória 5" loading="lazy">
-                    <div class="memory-overlay">
-                        <span class="memory-icon"></span>
-                    </div>
-                </div>
-
-                <div class="memory-item animate-on-scroll" data-animation="scale-in" data-duration="600" data-delay="500" onclick="openLightbox(5)">
-                    <img src="assets/c16f2193-c892-4d25-9127-845dc3a18718.jpeg" alt="Memória 6" loading="lazy">
-                    <div class="memory-overlay">
-                        <span class="memory-icon"></span>
-                    </div>
-                </div>
-
-                <div class="memory-item animate-on-scroll" data-animation="scale-in" data-duration="600" data-delay="600" onclick="openLightbox(6)">
-                    <img src="assets/ea667619-6b26-4264-974c-062ac0b05673.jpeg" alt="Memória 7" loading="lazy">
-                    <div class="memory-overlay">
-                        <span class="memory-icon"></span>
-                    </div>
-                </div>
-
-                <div class="memory-item animate-on-scroll" data-animation="scale-in" data-duration="600" data-delay="700" onclick="openLightbox(7)">
-                    <img src="assets/WhatsApp Image 2026-06-08 at 14.46.30.jpeg" alt="Memória 8" loading="lazy">
-                    <div class="memory-overlay">
-                        <span class="memory-icon"></span>
-                    </div>
-                </div>
-
-                <div class="memory-item animate-on-scroll" data-animation="scale-in" data-duration="600" data-delay="800" onclick="openLightbox(8)">
-                    <img src="assets/WhatsApp Image 2026-06-08 at 14.46.30 (1).jpeg" alt="Memória 9" loading="lazy">
-                    <div class="memory-overlay">
-                        <span class="memory-icon"></span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Lightbox Modal -->
-<div class="lightbox" id="lightbox">
-        <span class="lightbox-close" onclick="closeLightbox()">&times;</span>
-        
-        <button class="lightbox-btn lightbox-btn--prev" onclick="prevLightbox()">&#10094;</button>
-        
-        <div class="lightbox-content">
-            <img id="lightbox-img" src="" alt="">
-        </div>
-        
-        <button class="lightbox-btn lightbox-btn--next" onclick="nextLightbox()">&#10095;</button>
-        
-        <div class="lightbox-indicators" id="lightbox-indicators"></div>
-    </div>
-
-
-    <!-- ========== SEÇÃO 9: SURPRESA ========== -->
-    <section class="surprise-section" id="surprise">
-        <div class="container">
-            <h2 class="section-title animate-on-scroll" data-animation="fade-in" data-duration="600">
-                Uma Surpresa Especial 
-            </h2>
-
-            <div class="surprise-content animate-on-scroll" data-animation="scale-in" data-duration="700">
-                <button class="btn btn-surprise" onclick="celebrate()">
-                    Clique para a Surpresa 
-                </button>
-
-                <div class="surprise-message" id="surpriseMessage" style="display:none;">
-                    <h3>Feliz Dia dos Namorados! 💝</h3>
-                    <p>Você é o meu maior presente, meu amor eterno.<br>
-                    Obrigado por tornar cada dia extraordinário. Te amo infinitamente!</p>
-                    <img src="assets/WhatsApp Image 2026-06-08 at 14.46.30 (1).jpeg" alt="Coração Animado" class="heart-gif">
-                    <iframe class="spotify-player" data-testid="embed-iframe" style="border-radius:12px" src="https://open.spotify.com/embed/track/0ZPquQV2aKmDfwPjvMdvRp?utm_source=generator&theme=0&si=e27c1309e0d04408" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
-                    <p>❤️❤️❤️❤️❤️❤️</p>
-                </div>
-            </div>
-
-            <!-- Confetti container -->
-            <div id="confetti-container"></div>
-        </div>
-    </section>
+    <!-- Confetti container -->
+    <div id="confetti-container" aria-hidden="true"></div>
 
     <!-- ========== RODAPÉ ========== -->
     <footer class="footer">
         <div class="container">
-            <div class="footer-content animate-on-scroll" data-animation="fade-in" data-duration="600">
+            <div class="footer-content animate-on-scroll" data-animation="fade-in">
+                <span class="footer-heart" aria-hidden="true">❤</span>
                 <p class="footer-text">
                     Obrigado por fazer parte da minha vida.<br>
-                    Eu te amo ❤️
+                    <span class="footer-script">Eu te amo</span>
                 </p>
-                <p class="footer-year">
-                    &copy; 2026 - Uma Celebração do Nosso Amor
-                </p>
+                <p class="footer-year">&copy; 2026 · Uma Celebração do Nosso Amor</p>
             </div>
         </div>
     </footer>
 
+    <!-- Lightbox Modal -->
+    <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Visualizador de fotos" hidden>
+        <div class="lightbox-backdrop" data-lightbox-close></div>
+
+        <div class="lightbox-topbar">
+            <span class="lightbox-counter" id="lightbox-counter">1 / 9</span>
+            <button type="button" class="lightbox-close" data-lightbox-close aria-label="Fechar">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            </button>
+        </div>
+
+        <button type="button" class="lightbox-btn lightbox-btn--prev" aria-label="Foto anterior" onclick="prevLightbox()">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+
+        <div class="lightbox-content">
+            <img id="lightbox-img" src="" alt="" draggable="false">
+        </div>
+
+        <button type="button" class="lightbox-btn lightbox-btn--next" aria-label="Próxima foto" onclick="nextLightbox()">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+
+        <div class="lightbox-indicators" id="lightbox-indicators"></div>
+    </div>
+
     <!-- ========== SCRIPTS ========== -->
     <script defer src="scripts/utils.js"></script>
     <script defer src="scripts/animationController.js"></script>
-    <script defer src="scripts/carousel.js"></script>
     <script defer src="scripts/counter.js"></script>
     <script defer src="scripts/typewriter.js"></script>
     <script defer src="scripts/particles.js"></script>
     <script defer src="scripts/celebration.js"></script>
+    <script defer src="scripts/lightbox.js"></script>
     <script defer src="scripts/main.js"></script>
 </body>
 </html>

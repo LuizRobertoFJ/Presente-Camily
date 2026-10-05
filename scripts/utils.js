@@ -399,16 +399,34 @@ function getQueryParams() {
 }
 
 /**
- * Log com timestamp (apenas em desenvolvimento)
+ * Log com timestamp (apenas em modo debug: adicione ?debug na URL)
  * @param {*} message - Mensagem
  * @param {string} type - Tipo ('info', 'warn', 'error')
  */
+const DEBUG = new URLSearchParams(window.location.search).has('debug');
+
 function log(message, type = 'info') {
-    if (typeof message === 'object') {
-        console.log(`[${new Date().toLocaleTimeString()}] ${type.toUpperCase()}:`, message);
-    } else {
-        console.log(`[${new Date().toLocaleTimeString()}] ${type.toUpperCase()}: ${message}`);
-    }
+    if (!DEBUG && type === 'info') return;
+
+    const method = type === 'error' ? 'error' : type === 'warn' ? 'warn' : 'log';
+    const prefix = `[${new Date().toLocaleTimeString()}] ${type.toUpperCase()}:`;
+    console[method](prefix, message);
+}
+
+/**
+ * Verificar se o usuário prefere menos movimento
+ * @returns {boolean} True se movimento reduzido está ativo
+ */
+function prefersReducedMotion() {
+    return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+}
+
+/**
+ * Verificar se é um dispositivo de toque / tela pequena
+ * @returns {boolean} True se for mobile
+ */
+function isMobileDevice() {
+    return window.matchMedia('(max-width: 767px), (pointer: coarse)').matches;
 }
 
 // ========== EXPORT PARA MODULAR USE ========== //

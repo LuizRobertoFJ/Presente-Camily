@@ -34,6 +34,10 @@ class TypewriterEffect {
      * Inicializar typewriter
      */
     init() {
+        this.reserveSpace();
+        window.addEventListener('resize', debounce(() => this.reserveSpace(), 200));
+        document.fonts?.ready.then(() => this.reserveSpace());
+
         if (this.options.startOnScroll) {
             this.setupScrollTrigger();
         }
@@ -42,11 +46,26 @@ class TypewriterEffect {
     }
 
     /**
+     * Reservar a altura do texto completo para a página não "pular"
+     * enquanto as letras aparecem
+     */
+    reserveSpace() {
+        const box = this.textElement.parentElement;
+        if (!box) return;
+
+        const current = this.textElement.textContent;
+        box.style.minHeight = '';
+        this.textElement.textContent = this.fullText;
+        box.style.minHeight = `${box.offsetHeight}px`;
+        this.textElement.textContent = current;
+    }
+
+    /**
      * Setup para iniciar ao scrollar para elemento
      */
     setupScrollTrigger() {
         const options = {
-            threshold: 0.5
+            threshold: 0.35
         };
 
         this.intersectionObserver = new IntersectionObserver((entries) => {
@@ -79,7 +98,7 @@ class TypewriterEffect {
      */
     stop() {
         if (this.typewriterInterval) {
-            clearInterval(this.typewriterInterval);
+            clearTimeout(this.typewriterInterval);
             this.typewriterInterval = null;
         }
         this.isTyping = false;
@@ -94,16 +113,11 @@ class TypewriterEffect {
             this.textElement.textContent += char;
 
             // Verificar se deve fazer pausa após pontuação
-            if (this.options.pauseOnPunctuation && ['.', '!', '?', ','].includes(char)) {
-                this.stop();
-                setTimeout(() => {
-                    this.currentIndex++;
-                    this.type();
-                }, this.options.pauseDuration);
-            } else {
-                this.currentIndex++;
-                this.typewriterInterval = setTimeout(() => this.type(), this.options.speed);
-            }
+            this.currentIndex++;
+
+            const isPause = this.options.pauseOnPunctuation && ['.', '!', '?', ',', '\n'].includes(char);
+            const wait = isPause ? this.options.pauseDuration : this.options.speed;
+            this.typewriterInterval = setTimeout(() => this.type(), wait);
         } else {
             this.isTyping = false;
             this.onComplete();
@@ -125,6 +139,8 @@ class TypewriterEffect {
      * Callback quando typewriter termina
      */
     onComplete() {
+        this.textElement.closest('.letter-container')?.classList.add('is-complete');
+
         // Disparar evento customizado
         const event = new CustomEvent('typewriterComplete', {
             detail: { text: this.fullText }
@@ -137,6 +153,7 @@ class TypewriterEffect {
      */
     reset() {
         this.stop();
+        this.textElement.closest('.letter-container')?.classList.remove('is-complete');
         this.currentIndex = 0;
         this.textElement.textContent = '';
     }
@@ -188,7 +205,7 @@ Obrigado por cada abraço, cada riso, cada lágrima compartilhada. Obrigado por 
 
 Hoje, e em todos os dias que virão, prometo te amar, te respeitar, e te fazer feliz.
 
-Você não é só meu amor, mas minha melhor amiga, minha confidente, minha alma gêmea.'
+Você não é só meu amor, mas minha melhor amiga, minha confidente, minha alma gêmea.
 
 Com todo meu coração,
 
@@ -202,11 +219,22 @@ let typewriter = null;
  */
 function initTypewriter() {
     typewriter = new TypewriterEffect('#typewriter-text', loveLetter, {
-        speed: 45,
+        speed: 32,
         pauseOnPunctuation: true,
-        pauseDuration: 150,
+        pauseDuration: 180,
         showCursor: true,
         startOnScroll: true
+    });
+
+    // Movimento reduzido: mostrar a carta inteira de uma vez
+    if (prefersReducedMotion()) {
+        typewriter.complete();
+    }
+
+    // Botão "Ler tudo agora"
+    document.querySelector('#letterSkip')?.addEventListener('click', () => {
+        typewriter.intersectionObserver?.disconnect();
+        typewriter.complete();
     });
 }
 
