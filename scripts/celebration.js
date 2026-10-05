@@ -2,203 +2,194 @@
 
 /**
  * CelebrationEffect
- * Cria efeitos de celebração: confete, corações voadores e sparkles
+ * Cria efeitos de celebração: confete, corações voadores e sparkles.
+ * As keyframes ficam em styles/animations.css.
  */
 class CelebrationEffect {
     constructor(containerSelector = '#confetti-container', options = {}) {
         this.container = document.querySelector(containerSelector);
 
         this.options = {
-            confettiCount: 50,
-            confettiDuration: 3000,
-            heartCount: 15,
-            heartDuration: 3000,
-            sparkleCount: 30,
-            sparkleDuration: 2000,
-            colors: ['#ff69b4', '#dc143c', '#8b0000', '#d4af37', '#ff1493'],
+            confettiCount: 90,
+            heartCount: 22,
+            sparkleCount: 26,
+            colors: ['#f06292', '#d6336c', '#8e1538', '#c9a24b', '#ffb3c7', '#ffffff'],
+            hearts: ['❤️', '💕', '💖', '💗', '💝'],
             ...options
         };
 
-        if (this.container) {
-            this.init();
+        // Menos elementos no celular para manter 60fps
+        if (isMobileDevice()) {
+            this.options.confettiCount = Math.round(this.options.confettiCount * 0.6);
+            this.options.heartCount = Math.round(this.options.heartCount * 0.7);
+            this.options.sparkleCount = Math.round(this.options.sparkleCount * 0.6);
         }
-    }
 
-    /**
-     * Inicializar effect
-     */
-    init() {
         log('CelebrationEffect inicializado', 'info');
     }
 
+    randomColor() {
+        return this.options.colors[Math.floor(Math.random() * this.options.colors.length)];
+    }
+
     /**
-     * Criar confete
+     * Confete caindo por toda a tela
      */
     createConfetti() {
+        const fragment = document.createDocumentFragment();
+
         for (let i = 0; i < this.options.confettiCount; i++) {
-            const confetti = document.createElement('div');
+            const confetti = document.createElement('span');
+            const w = randomBetween(6, 12);
+            const isRibbon = Math.random() > 0.6;
+
             confetti.className = 'confetti';
-            confetti.style.left = Math.random() * 100 + '%';
-            confetti.style.backgroundColor = this.options.colors[Math.floor(Math.random() * this.options.colors.length)];
-            confetti.style.width = (Math.random() * 10 + 5) + 'px';
-            confetti.style.height = (Math.random() * 10 + 5) + 'px';
-            confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0%';
+            confetti.style.left = `${Math.random() * 100}%`;
+            confetti.style.width = `${isRibbon ? w * 0.5 : w}px`;
+            confetti.style.height = `${isRibbon ? w * 2 : w * 0.6}px`;
+            confetti.style.background = this.randomColor();
+            confetti.style.borderRadius = Math.random() > 0.7 ? '50%' : '2px';
+            confetti.style.setProperty('--drift', `${randomBetween(-120, 120)}px`);
+            confetti.style.setProperty('--spin', `${randomBetween(360, 1080) * (Math.random() > 0.5 ? 1 : -1)}deg`);
+            confetti.style.animation = `confettiFall ${randomBetween(2.6, 4.6)}s cubic-bezier(0.25, 0.46, 0.45, 0.94) ${randomBetween(0, 0.6)}s both`;
 
-            const duration = Math.random() * 2 + 2;
-            const delay = Math.random() * 0.3;
-
-            confetti.style.animation = `fall ${duration}s linear ${delay}s forwards`;
-            confetti.style.opacity = Math.random() * 0.5 + 0.5;
-
-            this.container.appendChild(confetti);
-
-            // Remover após animação
-            setTimeout(() => {
-                confetti.remove();
-            }, (duration + delay) * 1000);
+            confetti.addEventListener('animationend', () => confetti.remove(), { once: true });
+            fragment.appendChild(confetti);
         }
+
+        this.container.appendChild(fragment);
     }
 
     /**
-     * Criar corações voadores
+     * Corações subindo de baixo até o topo da tela
      */
     createHearts() {
-        const hearts = ['❤️', '💕', '💖', '💗', '💝'];
+        const fragment = document.createDocumentFragment();
 
         for (let i = 0; i < this.options.heartCount; i++) {
-            const heart = document.createElement('div');
+            const heart = document.createElement('span');
             heart.className = 'heart-animation';
-            heart.innerHTML = hearts[Math.floor(Math.random() * hearts.length)];
-            heart.style.left = Math.random() * 100 + 'vw';
-            heart.style.bottom = '-50px';
-            heart.style.fontSize = (Math.random() * 20 + 20) + 'px';
+            heart.textContent = this.options.hearts[Math.floor(Math.random() * this.options.hearts.length)];
+            heart.style.left = `${randomBetween(2, 92)}%`;
+            heart.style.fontSize = `${randomBetween(18, 40)}px`;
+            heart.style.setProperty('--sway', `${randomBetween(-60, 60)}px`);
+            heart.style.setProperty('--tilt', `${randomBetween(-25, 25)}deg`);
+            heart.style.animation = `heartRise ${randomBetween(3.5, 6)}s var(--ease-out) ${randomBetween(0, 1.4)}s both`;
 
-            this.container.appendChild(heart);
-
-            // Remover após animação
-            setTimeout(() => {
-                heart.remove();
-            }, 3000);
+            heart.addEventListener('animationend', () => heart.remove(), { once: true });
+            fragment.appendChild(heart);
         }
+
+        this.container.appendChild(fragment);
     }
 
     /**
-     * Criar sparkles (brilhos)
+     * Brilhos dourados espalhados
      */
     createSparkles() {
+        const fragment = document.createDocumentFragment();
+
         for (let i = 0; i < this.options.sparkleCount; i++) {
-            const sparkle = document.createElement('div');
-            sparkle.style.position = 'fixed';
-            sparkle.style.pointerEvents = 'none';
-            sparkle.style.width = '10px';
-            sparkle.style.height = '10px';
-            sparkle.style.borderRadius = '50%';
-            sparkle.style.backgroundColor = '#d4af37';
-            sparkle.style.boxShadow = '0 0 10px #d4af37';
-            sparkle.style.left = Math.random() * window.innerWidth + 'px';
-            sparkle.style.top = Math.random() * window.innerHeight + 'px';
-            sparkle.style.zIndex = '999';
+            const sparkle = document.createElement('span');
+            sparkle.className = 'sparkle';
+            sparkle.style.left = `${Math.random() * 100}%`;
+            sparkle.style.top = `${Math.random() * 100}%`;
+            sparkle.style.animation = `sparkle ${randomBetween(0.9, 1.6)}s ease-out ${randomBetween(0, 1.2)}s both`;
 
-            const duration = Math.random() * 1 + 1;
-            const delay = Math.random() * 0.5;
-
-            sparkle.style.animation = `sparkle ${duration}s ease-out ${delay}s forwards`;
-
-            this.container.appendChild(sparkle);
-
-            // Remover após animação
-            setTimeout(() => {
-                sparkle.remove();
-            }, (duration + delay) * 1000);
+            sparkle.addEventListener('animationend', () => sparkle.remove(), { once: true });
+            fragment.appendChild(sparkle);
         }
+
+        this.container.appendChild(fragment);
     }
 
     /**
-     * Combinar todos os efeitos
-     */
-    celebrate() {
-        this.createConfetti();
-        this.createHearts();
-        this.createSparkles();
-
-        // Efeito sonoro (opcional - pode usar Web Audio API)
-        this.playSound();
-    }
-
-    /**
-     * Reproduzir som de celebração (se disponível)
-     */
-    playSound() {
-        try {
-            // Criar sons simples com Web Audio API
-            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-
-            // Som 1: Nota aguda
-            const osc1 = audioContext.createOscillator();
-            const gain1 = audioContext.createGain();
-
-            osc1.connect(gain1);
-            gain1.connect(audioContext.destination);
-
-            osc1.frequency.value = 800;
-            gain1.gain.setValueAtTime(0.2, audioContext.currentTime);
-            gain1.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
-
-            osc1.start(audioContext.currentTime);
-            osc1.stop(audioContext.currentTime + 0.3);
-
-            // Som 2: Nota mais grave
-            setTimeout(() => {
-                const osc2 = audioContext.createOscillator();
-                const gain2 = audioContext.createGain();
-
-                osc2.connect(gain2);
-                gain2.connect(audioContext.destination);
-
-                osc2.frequency.value = 1000;
-                gain2.gain.setValueAtTime(0.2, audioContext.currentTime);
-                gain2.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
-
-                osc2.start(audioContext.currentTime);
-                osc2.stop(audioContext.currentTime + 0.3);
-            }, 150);
-        } catch (e) {
-            // Silencioso se Web Audio não suportado
-        }
-    }
-
-    /**
-     * Explodir confete em posição específica
+     * Explosão de confete a partir de um ponto (ex.: o botão)
      * @param {number} x - Posição X
      * @param {number} y - Posição Y
      */
     confettiExplosion(x, y) {
-        for (let i = 0; i < 30; i++) {
-            const confetti = document.createElement('div');
+        const fragment = document.createDocumentFragment();
+        const count = isMobileDevice() ? 24 : 36;
+
+        for (let i = 0; i < count; i++) {
+            const confetti = document.createElement('span');
+            const angle = (Math.PI * 2 * i) / count + randomBetween(-0.2, 0.2);
+            const distance = randomBetween(90, 220);
+
             confetti.className = 'confetti';
-            confetti.style.position = 'fixed';
-            confetti.style.left = x + 'px';
-            confetti.style.top = y + 'px';
-            confetti.style.backgroundColor = this.options.colors[Math.floor(Math.random() * this.options.colors.length)];
-            confetti.style.width = (Math.random() * 10 + 3) + 'px';
-            confetti.style.height = (Math.random() * 10 + 3) + 'px';
+            confetti.style.left = `${x}px`;
+            confetti.style.top = `${y}px`;
+            confetti.style.width = `${randomBetween(6, 10)}px`;
+            confetti.style.height = `${randomBetween(6, 10)}px`;
+            confetti.style.background = this.randomColor();
+            confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+            confetti.style.setProperty('--vx', `${Math.cos(angle) * distance}px`);
+            confetti.style.setProperty('--vy', `${Math.sin(angle) * distance}px`);
+            confetti.style.animation = `confettiBurst ${randomBetween(0.8, 1.3)}s var(--ease-out) both`;
 
-            const angle = (Math.PI * 2 * i) / 30;
-            const velocity = Math.random() * 5 + 5;
-            const vx = Math.cos(angle) * velocity;
-            const vy = Math.sin(angle) * velocity;
+            confetti.addEventListener('animationend', () => confetti.remove(), { once: true });
+            fragment.appendChild(confetti);
+        }
 
-            const duration = Math.random() * 2 + 1;
+        this.container.appendChild(fragment);
+    }
 
-            confetti.style.setProperty('--vx', vx);
-            confetti.style.setProperty('--vy', vy);
-            confetti.style.animation = `confettiFall ${duration}s ease-out forwards`;
+    /**
+     * Combinar todos os efeitos
+     * @param {Element} origin - Elemento de onde sai a explosão
+     */
+    celebrate(origin) {
+        if (!this.container || prefersReducedMotion()) return;
 
-            this.container.appendChild(confetti);
+        if (origin) {
+            const rect = origin.getBoundingClientRect();
+            this.confettiExplosion(rect.left + rect.width / 2, rect.top + rect.height / 2);
+        }
 
-            setTimeout(() => {
-                confetti.remove();
-            }, duration * 1000);
+        this.createConfetti();
+        this.createHearts();
+        this.createSparkles();
+
+        // Vibração curta em celulares que suportam
+        if (navigator.vibrate) {
+            navigator.vibrate([30, 40, 60]);
+        }
+
+        this.playSound();
+    }
+
+    /**
+     * Pequeno acorde de "sininho" com Web Audio API
+     */
+    playSound() {
+        try {
+            const AudioCtx = window.AudioContext || window.webkitAudioContext;
+            if (!AudioCtx) return;
+
+            const audioContext = new AudioCtx();
+            const notes = [659.25, 783.99, 987.77, 1318.51]; // Mi, Sol, Si, Mi
+
+            notes.forEach((frequency, index) => {
+                const start = audioContext.currentTime + index * 0.09;
+                const osc = audioContext.createOscillator();
+                const gain = audioContext.createGain();
+
+                osc.type = 'sine';
+                osc.frequency.value = frequency;
+                gain.gain.setValueAtTime(0.0001, start);
+                gain.gain.exponentialRampToValueAtTime(0.12, start + 0.02);
+                gain.gain.exponentialRampToValueAtTime(0.0001, start + 0.6);
+
+                osc.connect(gain);
+                gain.connect(audioContext.destination);
+                osc.start(start);
+                osc.stop(start + 0.65);
+            });
+
+            setTimeout(() => audioContext.close(), 1400);
+        } catch (e) {
+            // Silencioso se Web Audio não suportado
         }
     }
 
@@ -206,69 +197,19 @@ class CelebrationEffect {
      * Destruir effect
      */
     destroy() {
-        // Limpar container
-        this.container.innerHTML = '';
+        if (this.container) {
+            this.container.innerHTML = '';
+        }
     }
-}
-
-// ========== KEYFRAMES ADICIONAIS ========== //
-// Adicionar ao CSS dinamicamente se não existirem
-function addCelebrationStyles() {
-    const styleId = 'celebration-styles';
-    if (document.getElementById(styleId)) return;
-
-    const style = document.createElement('style');
-    style.id = styleId;
-    style.textContent = `
-        @keyframes fall {
-            to {
-                transform: translateY(100vh) rotate(720deg);
-                opacity: 0;
-            }
-        }
-
-        @keyframes sparkle {
-            from {
-                opacity: 1;
-                transform: scale(1);
-            }
-            to {
-                opacity: 0;
-                transform: scale(0) translateY(-100px);
-            }
-        }
-
-        @keyframes confettiFall {
-            to {
-                transform: translateX(calc(var(--vx) * 100px)) translateY(calc(var(--vy) * 100px)) rotate(720deg);
-                opacity: 0;
-            }
-        }
-    `;
-
-    document.head.appendChild(style);
 }
 
 // ========== INSTÂNCIA GLOBAL ========== //
 let celebrationEffect = null;
 
-/**
- * Inicializar celebration effect quando DOM estiver pronto
- */
 function initCelebration() {
-    addCelebrationStyles();
-
-    celebrationEffect = new CelebrationEffect('#confetti-container', {
-        confettiCount: 60,
-        heartCount: 20,
-        sparkleCount: 40,
-        colors: ['#ff69b4', '#dc143c', '#8b0000', '#d4af37', '#ff1493']
-    });
+    celebrationEffect = new CelebrationEffect('#confetti-container');
 }
 
-/**
- * Listener para quando documento carregar
- */
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initCelebration);
 } else {
@@ -276,12 +217,20 @@ if (document.readyState === 'loading') {
 }
 
 /**
- * Disparar celebração
+ * Disparar celebração (botão da surpresa)
  */
 function celebrate() {
-    if (celebrationEffect) {
-        celebrationEffect.celebrate();
-        showSurpriseMessage();
+    const button = document.querySelector('#surpriseBtn');
+
+    celebrationEffect?.celebrate(button);
+
+    if (button && !button.classList.contains('is-opened')) {
+        button.classList.add('is-opened');
+        button.setAttribute('aria-expanded', 'true');
+        setTimeout(() => {
+            button.hidden = true;
+            showSurpriseMessage();
+        }, 450);
     }
 }
 
@@ -290,151 +239,27 @@ function celebrate() {
  */
 function showSurpriseMessage() {
     const message = document.querySelector('#surpriseMessage');
-    if (message) {
-        message.style.display = 'block';
-        animateElement(message, {
-            animation: 'scale-in',
-            duration: 800,
-            delay: 500
-        });
+    if (!message) return;
+
+    // Carrega o player do Spotify só agora (página inicial mais leve)
+    const player = message.querySelector('.spotify-player[data-src]');
+    if (player) {
+        player.src = player.dataset.src;
+        player.removeAttribute('data-src');
     }
+
+    message.hidden = false;
+    message.classList.add('is-revealed');
+
+    setTimeout(() => {
+        message.scrollIntoView({ behavior: prefersReducedMotion() ? 'auto' : 'smooth', block: 'start' });
+    }, 150);
 }
 
-/**
- * Obter instância de celebration
- * @returns {CelebrationEffect} Instância
- */
 function getCelebration() {
     return celebrationEffect;
 }
 
-/**
- * Confete explosion em ponto específico
- * @param {number} x - Posição X
- * @param {number} y - Posição Y
- */
 function confettiExplosion(x, y) {
-    if (celebrationEffect) {
-        celebrationEffect.confettiExplosion(x, y);
-    }
+    celebrationEffect?.confettiExplosion(x, y);
 }
-
-// ========== LIGHTBOX FUNCTIONS ========== //
-
-/**
- * Array com URLs das imagens para lightbox
- */
-const lightboxImages = [
-    'assets/63d65879-4111-4f9f-8b52-05b7ccf115ae.jpeg',
-    'assets/6b9428b6-5bc2-4570-b709-8ffc2489c8cc.jpeg',
-    'assets/731be33c-ed69-4531-b02a-bc084b448828.jpeg',
-    'assets/95ecfa30-aab8-4bdf-8fec-386409ecc985.jpeg',
-    'assets/b4948355-ff55-40bd-a8d9-16d87e4ac88b.jpeg',
-    'assets/c16f2193-c892-4d25-9127-845dc3a18718.jpeg',
-    'assets/ea667619-6b26-4264-974c-062ac0b05673.jpeg',
-    'assets/WhatsApp Image 2026-06-08 at 14.46.30.jpeg',
-    'assets/WhatsApp Image 2026-06-08 at 14.46.30 (1).jpeg'
-];
-
-let currentLightboxIndex = 0;
-
-/**
- * Abrir lightbox
- * @param {number} index - Índice da imagem
- */
-function openLightbox(index) {
-    currentLightboxIndex = index;
-    const lightbox = document.querySelector('#lightbox');
-    const img = document.querySelector('#lightbox-img');
-
-    img.src = lightboxImages[index];
-    lightbox.classList.add('active');
-
-    createLightboxIndicators();
-    updateLightboxIndicators();
-
-    // Bloquear scroll
-    document.body.style.overflow = 'hidden';
-}
-
-/**
- * Fechar lightbox
- */
-function closeLightbox() {
-    const lightbox = document.querySelector('#lightbox');
-    lightbox.classList.remove('active');
-
-    // Restaurar scroll
-    document.body.style.overflow = 'auto';
-}
-
-/**
- * Próxima imagem no lightbox
- */
-function nextLightbox() {
-    currentLightboxIndex = (currentLightboxIndex + 1) % lightboxImages.length;
-    const img = document.querySelector('#lightbox-img');
-    img.src = lightboxImages[currentLightboxIndex];
-    updateLightboxIndicators();
-}
-
-/**
- * Imagem anterior no lightbox
- */
-function prevLightbox() {
-    currentLightboxIndex = (currentLightboxIndex - 1 + lightboxImages.length) % lightboxImages.length;
-    const img = document.querySelector('#lightbox-img');
-    img.src = lightboxImages[currentLightboxIndex];
-    updateLightboxIndicators();
-}
-
-/**
- * Criar indicadores do lightbox
- */
-function createLightboxIndicators() {
-    const container = document.querySelector('#lightbox-indicators');
-    if (!container || container.children.length > 0) return;
-
-    lightboxImages.forEach((_, index) => {
-        const dot = document.createElement('span');
-        dot.className = 'lightbox-indicator';
-        if (index === currentLightboxIndex) {
-            dot.classList.add('active');
-        }
-        dot.onclick = () => {
-            currentLightboxIndex = index;
-            document.querySelector('#lightbox-img').src = lightboxImages[index];
-            updateLightboxIndicators();
-        };
-        container.appendChild(dot);
-    });
-}
-
-/**
- * Atualizar indicadores do lightbox
- */
-function updateLightboxIndicators() {
-    const indicators = document.querySelectorAll('.lightbox-indicator');
-    indicators.forEach((dot, index) => {
-        dot.classList.toggle('active', index === currentLightboxIndex);
-    });
-}
-
-// Fechar lightbox com ESC
-document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
-        const lightbox = document.querySelector('#lightbox');
-        if (lightbox.classList.contains('active')) {
-            closeLightbox();
-        }
-    }
-
-    const lightbox = document.querySelector('#lightbox');
-    if (lightbox.classList.contains('active')) {
-        if (e.key === 'ArrowLeft') {
-            prevLightbox();
-        } else if (e.key === 'ArrowRight') {
-            nextLightbox();
-        }
-    }
-});

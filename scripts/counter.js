@@ -95,28 +95,21 @@ class RelationshipCounter {
      * @param {number} newValue - Novo valor
      */
     animateValueChange(element, newValue) {
-        const oldValue = parseInt(element.textContent.replace(/\D/g, '')) || 0;
+        element.classList.add('is-ticking');
 
-        // Se o valor mudou
-        if (oldValue !== newValue) {
-            element.style.opacity = '0.5';
-            element.style.transform = 'scale(0.95)';
-
-            setTimeout(() => {
-                element.textContent = formatNumber(newValue);
-                element.style.opacity = '1';
-                element.style.transform = 'scale(1)';
-                element.style.transition = 'all 0.2s ease';
-            }, 100);
-        } else {
+        setTimeout(() => {
             element.textContent = formatNumber(newValue);
-        }
+            element.classList.remove('is-ticking');
+        }, 120);
     }
 
     /**
      * Iniciar atualização automática
      */
     startUpdating() {
+        if (this.updateInterval || !this.startDate) return;
+
+        this.update();
         this.updateInterval = setInterval(() => {
             this.update();
         }, this.updateIntervalDuration);

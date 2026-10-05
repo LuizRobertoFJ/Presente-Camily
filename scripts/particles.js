@@ -2,7 +2,10 @@
 
 /**
  * ParticleSystem
- * Cria e gerencia partículas flutuando (confete, corações, etc)
+ * Corações e brilhos subindo suavemente no fundo do hero.
+ * - Nítido em telas retina (devicePixelRatio)
+ * - Menos partículas no celular
+ * - Pausa quando o hero sai da tela ou a aba fica oculta
  */
 class ParticleSystem {
     constructor(canvasSelector, options = {}) {
@@ -10,20 +13,22 @@ class ParticleSystem {
         this.ctx = this.canvas ? this.canvas.getContext('2d') : null;
         this.particles = [];
         this.animationId = null;
+        this.isVisible = true;
+        this.width = 0;
+        this.height = 0;
+        this.lastTime = 0;
 
         this.options = {
-            particleCount: 30,
-            particleSize: { min: 2, max: 5 },
-            particleColors: ['#ff69b4', '#dc143c', '#8b0000', '#d4af37', '#ff1493'],
-            particleOpacity: { min: 0.3, max: 0.8 },
-            particleSpeed: { min: 0.5, max: 2 },
-            heartEmojis: ['❤️', '💕', '💖', '💗', '💝'],
-            heartFrequency: 0.05,
-            createHeartsWithEmoji: true,
+            particleCount: 40,
+            particleSize: { min: 6, max: 18 },
+            particleColors: ['#f06292', '#d6336c', '#e8436f', '#c9a24b', '#ffb3c7'],
+            particleOpacity: { min: 0.25, max: 0.7 },
+            particleSpeed: { min: 0.25, max: 0.8 },
+            heartFrequency: 0.7,
             ...options
         };
 
-        if (this.canvas) {
+        if (this.canvas && this.ctx) {
             this.init();
         }
     }
@@ -34,18 +39,51 @@ class ParticleSystem {
     init() {
         this.resizeCanvas();
         this.createParticles();
+
+        if (prefersReducedMotion()) {
+            // Apenas um quadro estático
+            this.draw();
+            return;
+        }
+
+        this.observeVisibility();
         this.start();
-        window.addEventListener('resize', () => this.resizeCanvas());
 
         log('ParticleSystem inicializado', 'info');
     }
 
     /**
-     * Redimensionar canvas
+     * Pausar quando o canvas não está visível (economia de bateria)
+     */
+    observeVisibility() {
+        if (!('IntersectionObserver' in window)) return;
+
+        const observer = new IntersectionObserver(([entry]) => {
+            this.isVisible = entry.isIntersecting;
+            if (this.isVisible) {
+                this.start();
+            } else {
+                this.stop();
+            }
+        });
+
+        observer.observe(this.canvas);
+    }
+
+    /**
+     * Redimensionar canvas respeitando o devicePixelRatio
      */
     resizeCanvas() {
-        this.canvas.width = window.innerWidth;
-        this.canvas.height = window.innerHeight;
+        if (!this.canvas) return;
+
+        const rect = this.canvas.getBoundingClientRect();
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+        this.width = rect.width || window.innerWidth;
+        this.height = rect.height || window.innerHeight;
+        this.canvas.width = Math.round(this.width * dpr);
+        this.canvas.height = Math.round(this.height * dpr);
+        this.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     }
 
     /**
@@ -54,112 +92,126 @@ class ParticleSystem {
     createParticles() {
         this.particles = [];
 
-        for (let i = 0; i < this.options.particleCount; i++) {
-            this.addParticle();
+        const count = isMobileDevice()
+            ? Math.round(this.options.particleCount * 0.55)
+            : this.options.particleCount;
+
+        for (let i = 0; i < count; i++) {
+            this.particles.push(this.createParticle(true));
         }
     }
 
     /**
-     * Adicionar partícula individual
+     * Criar partícula individual
+     * @param {boolean} randomY - Espalhar pela tela (início) ou nascer embaixo
      */
-    addParticle() {
+    createParticle(randomY = false) {
+        const { particleSize, particleOpacity, particleSpeed, particleColors } = this.options;
         const isHeart = Math.random() < this.options.heartFrequency;
+        const size = isHeart
+            ? randomBetween(particleSize.min, particleSize.max)
+            : randomBetween(2, 4);
 
-        const particle = {
-            x: Math.random() * this.canvas.width,
-            y: Math.random() * this.canvas.height,
-            size: isHeart ? 20 : getRandomNumber(
-                this.options.particleSize.min,
-                this.options.particleSize.max
-            ),
-            color: getRandomColor(),
-            opacity: Math.random() * (this.options.particleOpacity.max - this.options.particleOpacity.min) + this.options.particleOpacity.min,
-            vx: (Math.random() - 0.5) * this.options.particleSpeed.max,
-            vy: -Math.random() * this.options.particleSpeed.max + this.options.particleSpeed.min,
-            rotation: Math.random() * Math.PI * 2,
-            rotationSpeed: (Math.random() - 0.5) * 0.05,
-            isHeart: isHeart,
-            emoji: this.options.heartEmojis[Math.floor(Math.random() * this.options.heartEmojis.length)]
+        return {
+            x: Math.random() * this.width,
+            y: randomY ? Math.random() * this.height : this.height + size * 2,
+            size,
+            color: particleColors[Math.floor(Math.random() * particleColors.length)],
+            opacity: randomBetween(particleOpacity.min, particleOpacity.max),
+            speed: randomBetween(particleSpeed.min, particleSpeed.max),
+            swing: randomBetween(0.4, 1.4),
+            phase: Math.random() * Math.PI * 2,
+            rotation: randomBetween(-0.4, 0.4),
+            isHeart
         };
+    }
 
-        this.particles.push(particle);
+    /**
+     * Desenhar um coração centrado na origem
+     */
+    drawHeart(size) {
+        const s = size / 2;
+        const ctx = this.ctx;
+        ctx.beginPath();
+        ctx.moveTo(0, s * 0.35);
+        ctx.bezierCurveTo(0, s * 0.05, -s * 0.5, -s * 0.55, -s, -s * 0.05);
+        ctx.bezierCurveTo(-s * 1.1, s * 0.45, -s * 0.4, s * 0.8, 0, s * 1.1);
+        ctx.bezierCurveTo(s * 0.4, s * 0.8, s * 1.1, s * 0.45, s, -s * 0.05);
+        ctx.bezierCurveTo(s * 0.5, -s * 0.55, 0, s * 0.05, 0, s * 0.35);
+        ctx.closePath();
+        ctx.fill();
     }
 
     /**
      * Desenhar partículas
      */
     draw() {
-        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        const ctx = this.ctx;
+        ctx.clearRect(0, 0, this.width, this.height);
 
-        this.particles.forEach(particle => {
-            this.ctx.save();
-            this.ctx.globalAlpha = particle.opacity;
-            this.ctx.translate(particle.x, particle.y);
-            this.ctx.rotate(particle.rotation);
+        for (const p of this.particles) {
+            ctx.save();
+            ctx.globalAlpha = p.opacity;
+            ctx.fillStyle = p.color;
+            ctx.translate(p.x, p.y);
+            ctx.rotate(p.rotation + Math.sin(p.phase) * 0.15);
 
-            if (particle.isHeart && this.options.createHeartsWithEmoji) {
-                // Desenhar coração com emoji
-                this.ctx.font = `${particle.size}px Arial`;
-                this.ctx.textAlign = 'center';
-                this.ctx.textBaseline = 'middle';
-                this.ctx.fillText(particle.emoji, 0, 0);
+            if (p.isHeart) {
+                this.drawHeart(p.size);
             } else {
-                // Desenhar partícula com cor
-                this.ctx.fillStyle = particle.color;
-                this.ctx.beginPath();
-                this.ctx.arc(0, 0, particle.size / 2, 0, Math.PI * 2);
-                this.ctx.fill();
+                ctx.shadowColor = p.color;
+                ctx.shadowBlur = 6;
+                ctx.beginPath();
+                ctx.arc(0, 0, p.size / 2, 0, Math.PI * 2);
+                ctx.fill();
             }
 
-            this.ctx.restore();
-        });
+            ctx.restore();
+        }
     }
 
     /**
      * Atualizar posição de partículas
+     * @param {number} delta - Fator de tempo (1 = 60fps)
      */
-    update() {
-        this.particles.forEach((particle, index) => {
-            // Movimento
-            particle.x += particle.vx;
-            particle.y += particle.vy;
+    update(delta) {
+        for (let i = this.particles.length - 1; i >= 0; i--) {
+            const p = this.particles[i];
 
-            // Rotação
-            particle.rotation += particle.rotationSpeed;
+            p.phase += 0.02 * delta;
+            p.y -= p.speed * delta;
+            p.x += Math.sin(p.phase) * p.swing * 0.5 * delta;
 
-            // Gravidade suave
-            particle.vy += 0.1;
-
-            // Remover partícula se sair da tela
-            if (particle.y > this.canvas.height + 50) {
-                this.particles.splice(index, 1);
-                this.addParticle();
+            // Ao sair pelo topo, renasce embaixo
+            if (p.y < -p.size * 2) {
+                if (p.temporary) {
+                    this.particles.splice(i, 1);
+                } else {
+                    this.particles[i] = this.createParticle(false);
+                }
             }
-
-            // Wrap horizontal
-            if (particle.x < -50) {
-                particle.x = this.canvas.width + 50;
-            } else if (particle.x > this.canvas.width + 50) {
-                particle.x = -50;
-            }
-        });
+        }
     }
 
     /**
      * Loop de animação
      */
-    animate() {
-        this.update();
+    animate(time = 0) {
+        const delta = this.lastTime ? Math.min((time - this.lastTime) / 16.67, 3) : 1;
+        this.lastTime = time;
+
+        this.update(delta);
         this.draw();
-        this.animationId = requestAnimationFrame(() => this.animate());
+        this.animationId = requestAnimationFrame((t) => this.animate(t));
     }
 
     /**
      * Iniciar animação
      */
     start() {
-        if (!this.animationId) {
-            this.animate();
+        if (!this.animationId && this.isVisible && !document.hidden && !prefersReducedMotion()) {
+            this.lastTime = 0;
+            this.animationId = requestAnimationFrame((t) => this.animate(t));
         }
     }
 
@@ -178,60 +230,44 @@ class ParticleSystem {
      */
     destroy() {
         this.stop();
-        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        window.removeEventListener('resize', () => this.resizeCanvas());
+        this.ctx.clearRect(0, 0, this.width, this.height);
     }
 
     /**
-     * Adicionar explosão de partículas
+     * Adicionar explosão de corações em uma posição
      * @param {number} x - Posição X
      * @param {number} y - Posição Y
      * @param {number} count - Quantidade de partículas
      */
     explode(x, y, count = 20) {
         for (let i = 0; i < count; i++) {
-            const angle = (Math.PI * 2 * i) / count;
-            const velocity = 3;
-
-            const particle = {
-                x: x,
-                y: y,
-                size: getRandomNumber(3, 8),
-                color: getRandomColor(),
-                opacity: 0.9,
-                vx: Math.cos(angle) * velocity,
-                vy: Math.sin(angle) * velocity,
-                rotation: Math.random() * Math.PI * 2,
-                rotationSpeed: (Math.random() - 0.5) * 0.1,
-                isHeart: Math.random() < 0.3,
-                emoji: this.options.heartEmojis[Math.floor(Math.random() * this.options.heartEmojis.length)]
-            };
-
-            this.particles.push(particle);
+            const p = this.createParticle(false);
+            p.x = x + randomBetween(-30, 30);
+            p.y = y + randomBetween(-30, 30);
+            p.speed = randomBetween(1, 2.5);
+            p.temporary = true;
+            this.particles.push(p);
         }
     }
 
-    /**
-     * Obter número de partículas ativas
-     * @returns {number} Número de partículas
-     */
     getParticleCount() {
         return this.particles.length;
     }
 
-    /**
-     * Pausar animação
-     */
     pause() {
         this.stop();
     }
 
-    /**
-     * Retomar animação
-     */
     resume() {
         this.start();
     }
+}
+
+/**
+ * Número aleatório (float) entre min e max
+ */
+function randomBetween(min, max) {
+    return Math.random() * (max - min) + min;
 }
 
 // ========== INSTÂNCIA GLOBAL ========== //
@@ -241,60 +277,27 @@ let particleSystem = null;
  * Inicializar sistema de partículas quando DOM estiver pronto
  */
 function initParticleSystem() {
-    particleSystem = new ParticleSystem('#particleCanvas', {
-        particleCount: 50,
-        particleSize: { min: 2, max: 6 },
-        particleColors: ['#ff69b4', '#dc143c', '#8b0000', '#d4af37'],
-        particleOpacity: { min: 0.4, max: 0.9 },
-        particleSpeed: { min: 0.5, max: 1.5 },
-        heartFrequency: 0.08,
-        createHeartsWithEmoji: true
-    });
+    particleSystem = new ParticleSystem('#particleCanvas');
 }
 
-/**
- * Listener para quando documento carregar
- */
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initParticleSystem);
 } else {
     initParticleSystem();
 }
 
-/**
- * Obter instância do sistema de partículas
- * @returns {ParticleSystem} Instância do sistema
- */
 function getParticleSystem() {
     return particleSystem;
 }
 
-/**
- * Explodir partículas em posição
- * @param {number} x - Posição X
- * @param {number} y - Posição Y
- * @param {number} count - Quantidade
- */
 function explodeParticles(x, y, count = 30) {
-    if (particleSystem) {
-        particleSystem.explode(x, y, count);
-    }
+    particleSystem?.explode(x, y, count);
 }
 
-/**
- * Pausar partículas
- */
 function pauseParticles() {
-    if (particleSystem) {
-        particleSystem.pause();
-    }
+    particleSystem?.pause();
 }
 
-/**
- * Retomar partículas
- */
 function resumeParticles() {
-    if (particleSystem) {
-        particleSystem.resume();
-    }
+    particleSystem?.resume();
 }
