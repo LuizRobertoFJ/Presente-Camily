@@ -24,7 +24,6 @@
     .timeline-marker {
         width: 40px;
         height: 40px;
-        font-size: 1.1rem;
     }
 
     .timeline-content {
@@ -103,7 +102,6 @@
     .timeline-marker {
         width: 54px;
         height: 54px;
-        font-size: 1.5rem;
         top: 18px;
     }
 
